@@ -41,14 +41,14 @@ function frame(now) {
   last = now;
   const live = G.running && G.s;
   const s = live ? G.s : demo;
-  const flowing = live && !G.paused && G.modals === 0;
+  const flowing = live && !G.paused && !G.away && G.modals === 0;
   if (flowing) {
     const d = dt * G.speed;
     if (canWork()) devAdvance(d / WEEK_MS);
     G.acc += d;
     while (G.acc >= DAY_MS && G.running && G.modals === 0) { G.acc -= DAY_MS; advanceDay(); }
   }
-  if (live && s.loc === 'city' && G.modals === 0) updateCity(dt);
+  if (live && s.loc === 'city' && G.modals === 0 && !G.away) updateCity(dt);
   try { drawScene(ctx, s, now, { frozen: live && !flowing }); }
   catch (err) { if (!frame.warned) { frame.warned = true; console.error(err); } }
   if (live) {
@@ -192,3 +192,26 @@ requestAnimationFrame(frame);
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }
+
+/* ---------- Segundo plano: el juego se detiene si sales de la app o cambias de pestaña ---------- */
+(function () {
+  const away = () => {
+    if (G.away) return;
+    G.away = true;
+    SFX.stopMusic();
+    try { if (SFX.ctx && SFX.ctx.state === 'running') SFX.ctx.suspend(); } catch (e) { /* nada */ }
+    if (G.running && G.s) saveGame();
+  };
+  const back = () => {
+    if (!G.away) return;
+    G.away = false;
+    last = performance.now(); G.acc = Math.min(G.acc, DAY_MS * 0.5);
+    try { if (SFX.ctx && SFX.ctx.state === 'suspended') SFX.ctx.resume(); } catch (e) { /* nada */ }
+    if (G.running && G.s && G.s.loc === 'studio' && G.s.dev && !G.s.dev.finished && SFX.music) SFX.startMusic(G.s.dev.genre);
+  };
+  document.addEventListener('visibilitychange', () => (document.hidden ? away() : back()));
+  window.addEventListener('pagehide', away);
+  window.addEventListener('pageshow', () => { if (!document.hidden) back(); });
+  document.addEventListener('pause', away);   // eventos nativos de la app Android
+  document.addEventListener('resume', back);
+})();
