@@ -6,6 +6,10 @@ Desarrollado por **Julian Camilo Forero Daza**.
 
 ## Cómo jugar
 
+### Empezar
+- Una pantalla de carga y luego creas tu personaje: escribe tu nombre y elige tu género.
+- Cada menú tiene su botón **?** con instrucciones (se abren solas la primera vez).
+
 ### Producir
 - **Nueva canción:** ponle nombre y elige género, tema y formato (Sencillo, EP o Álbum). Después repartes tu enfoque entre las 9 áreas de las 3 fases (Composición, Grabación y Producción). Solo avanza mientras estás en el estudio.
 - **Reseñas:** cuatro críticos califican cada lanzamiento. Con cada canción descubres qué áreas pesan más en cada género y qué combinaciones de género y tema funcionan.
@@ -13,7 +17,7 @@ Desarrollado por **Julian Camilo Forero Daza**.
 
 ### Mundo abierto
 - **Ciudad:** sal del estudio y camina con flechas/WASD o haciendo clic. Entra a los edificios con `E` o con un clic:
-  - Tienda de música · Academia · Café La Corchea · Club Neón 8 · Radio FM Pixel · Banco Pixel · Parque · Bienes Raíces · Agencia de Talentos · Centro Comercial.
+  - Tienda de música · Academia · Café La Corchea · Club Neón 8 · Radio FM Pixel · Banco Pixel · Tienda 24/7 · Bolsa Pixel · Parque · Bienes Raíces · Agencia de Talentos · Centro Comercial.
 - Con bicicleta o auto te mueves más rápido.
 
 ### Vida (estilo Sims)
@@ -29,6 +33,12 @@ Desarrollado por **Julian Camilo Forero Daza**.
 - **Rutina automática** (panel Vida): comes, duermes y descansas solo cuando una barra está muy baja.
 
 ### Dinero y estilo
+- **Tienda 24/7:** café, bebidas hidratantes, energizantes, vitaminas, cerveza, aguardiente, whisky, cigarrillos, vape y chicles de nicotina. Cada uno te ayuda ya, pero casi todos tienen un costo después: el energizante da energía ilimitada una semana y luego 2 semanas de bajón; el alcohol deja resaca; la nicotina crea dependencia y ansiedad. También vende seguridad para el estudio: alarma, firewall y caja fuerte.
+- **Amenazas:** te pueden robar el estudio (efectivo y equipo), hackear tu computador y filtrar la canción que estás haciendo, o intentar estafarte con mensajes y negocios "garantizados".
+- **Bolsa Pixel:** acciones de 4 empresas cuyo precio sube y baja cada semana, y negocios (food truck, tienda de discos, bar karaoke, escuela de música, sala de conciertos) que dejan ingresos semanales.
+- **Festivales:** desde 40 de prestigio, los festivales te contratan para tocar en vivo. Puedes aceptar, negociar o rechazar.
+- **Chocheiner:** peluche legendario único ($120.000, desde el Estudio en local). Sube velocidad, fases, ambiente y ánimo.
+- **Merch:** se vende según tu éxito actual (canciones sonando, nota y listas), el precio sube con tu prestigio y el mercado se satura si lo inundas. Lotes de 50 a 5.000 unidades, más baratos por volumen.
 - **Celular** (botón sobre la escena o tecla `T`): guarda o saca plata del banco en un toque, pide comida a domicilio (PixelEats), toma un taxi a cualquier lugar y compra en línea (Do Re Mi con 20% de envío, Pixel Mall, Casas y Talentos). También abre mensajes, séquito, estilo, objetivos y trabajos.
 - **Banco Pixel:** cuenta de ahorros con intereses (nadie te la roba en la calle), CDT a 12, 24 o 48 semanas y créditos con cuota semanal automática. Si dejas de pagar 4 cuotas, el banco embarga tus ahorros.
 - **La DIAN:** cobra una vez al año solo sobre tus ganancias (ingresos menos gastos), por tramos de 0%, 4%, 8% y 12%, con tope del 5% de lo que tienes. Puedes pagar de una, contratar un contador o pagar en 4 cuotas.
@@ -77,6 +87,8 @@ y abre http://localhost:5173.
 | `js/extras.js` | Objetivos con recompensas, trabajos e ingresos pasivos |
 | `js/empire.js` | Banco, la DIAN, séquito y personalización del productor |
 | `js/phone.js` | El celular y sus apps |
+| `js/guide.js` | Pantalla de carga, creación del personaje y ayuda de cada menú |
+| `js/city2.js` | Tienda 24/7, seguridad del estudio, Bolsa, negocios, festivales y el Chocheiner |
 | `js/ui.js`, `js/ui2.js` | Menús, paneles y ventanas |
 | `js/main.js` | Arranque y bucle principal |
 | `serve.py` | Servidor local sin caché |

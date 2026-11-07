@@ -91,6 +91,8 @@ Object.assign(UI, {
     if (id === 'mall') return this.mall();
     if (id === 'agency') return this.agency();
     if (id === 'bank') return this.bank();
+    if (id === 'shop247') return this.shop247();
+    if (id === 'stocks') return this.invest();
     this.venue(id);
   },
 

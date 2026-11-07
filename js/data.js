@@ -144,6 +144,8 @@ const DECOR = [
   { id: 'dec_sofa',     name: 'Sofá para artistas',      price: 6400,  amb: 4, icon: 'sofa',   desc: 'Los artistas se sienten como en casa.', room: 2 },
   { id: 'dec_arcade',   name: 'Máquina arcade',          price: 19200, amb: 6, icon: 'arcade', desc: 'Para los descansos entre tomas.', room: 3 },
   { id: 'dec_discos',   name: 'Discos de oro',           price: 32000, amb: 8, icon: 'gold',   desc: 'Que todos vean tus logros.', room: 3 },
+  { id: 'dec_chocheiner', name: 'Chocheiner (peluche legendario)', price: 120000, amb: 10, spd: 1.1, p: [3, 3, 3], icon: 'chocheiner', room: 3, legend: true,
+    desc: 'Único en el mundo. Te mira fijo mientras produces: +10% velocidad, +3 en todas las fases, +ambiente y +ánimo cada día.' },
 ];
 
 const ROOMS = [

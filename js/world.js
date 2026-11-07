@@ -14,10 +14,12 @@ const PLACES = [
   { id: 'bank',    name: 'Banco Pixel',            sign: 'BANCO',      x: 64,  y: 98, w: 28, h: 34, wall: '#e8e0d8', roof: '#1d6fb0', text: '#1d2b53' },
   { id: 'agency',  name: 'Agencia de Talentos',    sign: 'TALENTOS',   x: 114, y: 90, w: 88, h: 42, wall: '#c2c3c7', roof: '#83769c', text: '#1d2b53' },
   { id: 'mall',    name: 'Centro Comercial',       sign: 'MALL',       x: 224, y: 90, w: 92, h: 42, wall: '#ffccaa', roof: '#ff77a8', text: '#7e2553' },
+  { id: 'shop247', name: 'Tienda 24/7',           sign: '24/7',       x: 2,   y: 160, w: 34, h: 18, wall: '#00a83a', roof: '#ffec27', text: '#fff1e8', kiosk: true, entry: { x: 19, y: 146 } },
+  { id: 'stocks',  name: 'Bolsa Pixel',           sign: 'BOLSA',      x: 60,  y: 160, w: 32, h: 18, wall: '#1d2b53', roof: '#c9a227', text: '#ffec27', kiosk: true, entry: { x: 76, y: 146 } },
   { id: 'park',    name: 'Parque Central', park: true, x: 112, y: 152, w: 92, h: 28 },
 ];
 const PLACE_BY_ID = Object.fromEntries(PLACES.map(p => [p.id, p]));
-for (const p of PLACES) p.entry = p.park ? { x: 158, y: 156 } : { x: Math.round(p.x + p.w / 2), y: p.y + p.h + 4 };
+for (const p of PLACES) p.entry = p.entry || (p.park ? { x: 158, y: 156 } : { x: Math.round(p.x + p.w / 2), y: p.y + p.h + 4 });
 
 const ROADS = [
   { x: 0, y: 70, w: 320, h: 14 }, { x: 0, y: 136, w: 320, h: 14 },
@@ -29,7 +31,7 @@ const BLOCKERS = [
   { x: 40, y: 158, w: 16, h: 12 },    // fuente
   { x: 0, y: 0, w: 320, h: 4 },
 ];
-const TREES = [[56, 8], [278, 8], [8, 146], [88, 160], [70, 172], [196, 158], [150, 172], [176, 170], [130, 174]];
+const TREES = [[56, 8], [278, 8], [50, 172], [196, 158], [150, 172], [176, 170], [130, 174]];
 
 /* ---------- Rejilla para caminar ---------- */
 const CELL = 4, GW = 80, GH = 45;
@@ -269,6 +271,9 @@ function drawBuilding(p, t) {
   if (p.id === 'studio') {
     R(dx - 1, y + h - 15, 12, 15, '#c2c3c7'); R(dx, y + h - 14, 10, 14, '#ffffff'); P(dx + 8, y + h - 7, '#ffa300');
     for (let i = 0; i < 4; i++) R(dx - i, y + h + i, 10 + i * 2, 1, `rgba(255,255,255,${0.25 - i * 0.05})`);
+  } else if (p.kiosk) {
+    R(x + 3, y + 11, w - 6, 5, '#7fd0ff'); R(x + 3, y + 11, w - 6, 1, '#fff1e8');
+    for (let i = 0; i < w; i += 6) R(x + i, y - 2, 3, 3, i % 12 ? '#fff1e8' : p.roof);
   } else if (p.id === 'mall') {
     R(dx - 6, y + h - 12, 22, 12, '#7fd0ff'); R(dx + 4, y + h - 12, 1, 12, '#1d6fb0');
   } else {

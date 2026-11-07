@@ -120,10 +120,14 @@ function weeklyExtras() {
   for (const p of e.packs) { passive += p.weekly; p.weekly *= 0.94; p.weeks--; }
   e.packs = e.packs.filter(p => p.weeks > 0);
   // Merch: se vende según tus fans
+  // Merch: se vende según tu éxito actual y se satura si inundas el mercado
+  e.merchSat = (e.merchSat || 0) * 0.9;
   if (e.merch > 0) {
-    const sold = Math.min(e.merch, Math.round(3 + Math.sqrt(s.fans) * 0.35 + s.fans * 0.0004));
-    e.merch -= sold; e.merchSold += sold; passive += sold * MERCH.price;
-    if (e.merch === 0) UI.toast('¡Se agotó tu merch! Pide más en el Centro Comercial.', 'muted');
+    const sold = Math.min(e.merch, merchDemand(s));
+    e.merch -= sold; e.merchSold += sold; e.merchSat += sold;
+    const store = Math.round(e.merch * MERCH.storage);
+    passive += sold * merchPrice(s) - store;
+    if (e.merch === 0) UI.toast('¡Se agotó tu merch! Pide más en Trabajos.', 'muted');
   }
   // Alquiler de la cabina cuando tus artistas no la usan
   if (e.rentCabina && hasModule('cabina')) {
@@ -133,12 +137,32 @@ function weeklyExtras() {
   if (passive > 0) { s.money += passive; e.sideIncome += passive; s.lastSide = passive; } else s.lastSide = 0;
 }
 
-const MERCH = { batch: 100, cost: 1100, price: 25, minFans: 500 };
-function buyMerch() {
-  const s = G.s, e = exState(s);
+const MERCH = {
+  minFans: 500, storage: 0.05,
+  batches: [{ n: 50, unit: 14 }, { n: 100, unit: 12 }, { n: 500, unit: 10 }, { n: 1000, unit: 9 }, { n: 5000, unit: 7.5 }],
+};
+// Éxito actual: qué tan buenas y sonadas están tus canciones activas
+function merchHype(s = G.s) {
+  const act = s.songs.filter(x => x.active);
+  if (!act.length) return 0.3;
+  const avg = act.reduce((a, x) => a + x.score, 0) / act.length;
+  const top = act.filter(x => x.chart && x.chart <= 10).length, charting = act.filter(x => x.chart).length;
+  return clamp(0.2 + avg / 10 * 0.8 + charting * 0.1 + top * 0.25, 0.3, 2.5);
+}
+function merchHypeLabel(h) { return h < 0.6 ? 'baja' : h < 1 ? 'normal' : h < 1.6 ? 'alta' : 'furor'; }
+function merchPrice(s = G.s) { return Math.round(15 + Math.min(25, s.prestige / 40)); }
+function merchDemand(s = G.s) {
+  const e = exState(s);
+  const base = 2 + Math.sqrt(s.fans) * 0.25 + s.fans * 0.0002;
+  const sat = 1 / (1 + (e.merchSat || 0) / (s.fans * 0.15 + 50));
+  return Math.max(0, Math.round(base * merchHype(s) * sat));
+}
+function buyMerch(n) {
+  const s = G.s, e = exState(s), b = MERCH.batches.find(x => x.n === n) || MERCH.batches[1];
   if (s.fans < MERCH.minFans) return `Necesitas al menos ${fmtNum(MERCH.minFans)} fans para vender merch.`;
-  if (s.money < MERCH.cost) return 'No te alcanza el dinero.';
-  s.money -= MERCH.cost; e.merch += MERCH.batch;
+  const cost = Math.round(b.n * b.unit);
+  if (s.money < cost) return 'No te alcanza el dinero.';
+  s.money -= cost; e.merch += b.n;
   return null;
 }
 
@@ -289,9 +313,10 @@ Object.assign(UI, {
       h += '<h3>Ingresos pasivos</h3><div class="grid">';
       const packW = e.packs.reduce((a, p) => a + p.weekly, 0);
       h += `<div class="card">${iconImg('vinyl')}<div class="cinfo"><b>Sample packs</b><div class="muted">${e.packs.length ? `${e.packs.length} a la venta · ~${fmtMoney(packW)}/sem` : 'Aún no tienes packs a la venta.'}</div></div></div>`;
-      h += `<div class="card">${iconImg('fans')}<div class="cinfo"><b>Merch</b><div class="muted">${e.merch} en inventario · ${fmtNum(e.merchSold)} vendidos. Se vende solo según tus fans (${fmtMoney(MERCH.price)} c/u).</div>
-        <div class="bonus">Lote de ${MERCH.batch} camisetas: ${fmtMoney(MERCH.cost)}</div></div>
-        <div class="cbuy"><button class="btn primary small" data-merch="1" ${s.money < MERCH.cost || s.fans < MERCH.minFans ? 'disabled' : ''}>${s.fans < MERCH.minFans ? `${fmtNum(MERCH.minFans)} fans` : 'Pedir lote'}</button></div></div>`;
+      const dem = merchDemand(s), hype = merchHype(s);
+      h += `<div class="card merch-card">${iconImg('fans')}<div class="cinfo"><b>Merch</b><div class="muted">${fmtNum(e.merch)} en inventario · ${fmtNum(e.merchSold)} vendidos.
+        Se vende según tu éxito actual: demanda <b>${merchHypeLabel(hype)}</b>, ~${fmtNum(dem)}/sem a ${fmtMoney(merchPrice(s))} c/u. Si inundas el mercado se satura, y guardar cada unidad cuesta ${fmtMoney(MERCH.storage)}/sem.</div>
+        ${s.fans < MERCH.minFans ? `<div class="bonus">Necesitas ${fmtNum(MERCH.minFans)} fans</div>` : `<div class="merch-btns">${MERCH.batches.map(b => `<button class="btn small" data-merch="${b.n}" ${s.money < b.n * b.unit ? 'disabled' : ''}>${fmtNum(b.n)} · ${fmtMoney(b.n * b.unit)}</button>`).join('')}</div>`}</div></div>`;
       const cab = hasModule('cabina');
       h += `<div class="card">${iconImg('mic')}<div class="cinfo"><b>Alquilar tu cabina</b><div class="muted">Otros músicos pagan ${fmtMoney(180)}/sem por cada puesto libre de tu Cabina de grabación.</div></div>
         <div class="cbuy">${cab ? `<button class="btn small ${e.rentCabina ? 'primary' : ''}" data-rent="1">${e.rentCabina ? 'Alquilando ✓' : 'Alquilar'}</button>` : '<span class="muted small">Necesitas una Cabina</span>'}</div></div>`;
@@ -306,8 +331,8 @@ Object.assign(UI, {
         if (r.err) { this.toast(r.err, 'bad'); SFX.bad(); } else this.toast(r.msg, 'good');
       }
       if (b.dataset.merch) {
-        const err = buyMerch();
-        if (err) { this.toast(err, 'bad'); SFX.bad(); } else { this.toast(`Pediste ${MERCH.batch} camisetas de White Door.`, 'good'); SFX.coin(); }
+        const err = buyMerch(+b.dataset.merch);
+        if (err) { this.toast(err, 'bad'); SFX.bad(); } else { this.toast(`Pediste ${fmtNum(+b.dataset.merch)} camisetas de White Door.`, 'good'); SFX.coin(); }
       }
       if (b.dataset.rent) { e.rentCabina = !e.rentCabina; SFX.click(); }
       saveGame(); render(); this.refresh();

@@ -644,6 +644,8 @@ const ICONS = {
          'yyoyyoyyyoyy', 'yyoyoooyyoyy', '.yoyyoyyyoy.', '.yyoooooooy.', '..yyyyyyyy..', '....yyyy....'],
   fans: ['............', '..pp...pp...', '.pppp.pppp..', 'pppppppppppp', 'pppppppppppp', 'pppppppppppp',
          '.pppppppppp.', '..pppppppp..', '...pppppp...', '....pppp....', '.....pp.....', '............'],
+  chocheiner: ['.mm......mm.', '.mom....mom.', '.moommmmoom.', '.oooooooooo.', '.okkoooookko.', '.okwoooookwo.',
+        '.oooowwoooo.', '..owwmmwwo..', '..gggggggg..', '..wwwggwww..', '..wwwyywww..', '..oooooooo..'],
   cel: ['...kkkkkk...', '..kddddddk..', '..kdkggkdk..', '..kbbbbbbk..', '..kbpbbybk..', '..kbbbbbbk..',
         '..kblbbrbk..', '..kbbbbbbk..', '..kbbbbbbk..', '..kddddddk..', '..kddwwddk..', '...kkkkkk...'],
 };

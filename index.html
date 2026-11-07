@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>White Door — Music Studio Tycoon</title>
   <meta name="description" content="White Door: un juego tycoon 8-bit de estudio musical. Desarrollado por Julian Camilo Forero Daza.">
-  <link rel="stylesheet" href="css/style.css?v=2.4.0">
+  <link rel="stylesheet" href="css/style.css?v=2.5.0">
 </head>
 <body>
   <div id="app">
@@ -90,8 +90,13 @@
     <div class="title-box">
       <div class="title-logo">WHITE<br>DOOR</div>
       <div class="title-sub">Music Studio Tycoon</div>
-      <label class="title-label" for="title-name">Nombre del productor</label>
-      <input id="title-name" maxlength="20" value="Julian">
+      <label class="title-label" for="title-name">Tu nombre</label>
+      <input id="title-name" maxlength="20" placeholder="Escribe tu nombre" autocomplete="off">
+      <p id="title-err" class="title-err" hidden>Escribe un nombre para empezar.</p>
+      <span class="title-label">Género</span>
+      <div id="title-gender" class="gender-pick" role="group" aria-label="Género">
+        <button type="button" data-g="h" class="on">Hombre</button><button type="button" data-g="m">Mujer</button><button type="button" data-g="x">Otro</button>
+      </div>
       <div class="title-buttons">
         <button id="btn-continue" class="btn primary" hidden>Continuar</button>
         <button id="btn-new" class="btn primary">Nueva partida</button>
@@ -100,23 +105,34 @@
     </div>
   </div>
 
+  <div id="loader" aria-label="Cargando">
+    <div class="ld-box">
+      <div class="ld-door"></div>
+      <div class="ld-logo">WHITE DOOR</div>
+      <div class="ld-sub">Music Studio Tycoon</div>
+      <div class="ld-bar"><i></i></div>
+      <div class="ld-tip">Afinando los instrumentos...</div>
+    </div>
+  </div>
   <div id="modal-root"></div>
   <div id="toasts"></div>
 
-  <script src="js/data.js?v=2.4.0"></script>
-  <script src="js/data2.js?v=2.4.0"></script>
-  <script src="js/render.js?v=2.4.0"></script>
-  <script src="js/modules.js?v=2.4.0"></script>
-  <script src="js/audio.js?v=2.4.0"></script>
-  <script src="js/game.js?v=2.4.0"></script>
-  <script src="js/life.js?v=2.4.0"></script>
-  <script src="js/label.js?v=2.4.0"></script>
-  <script src="js/world.js?v=2.4.0"></script>
-  <script src="js/ui.js?v=2.4.0"></script>
-  <script src="js/ui2.js?v=2.4.0"></script>
-  <script src="js/extras.js?v=2.4.0"></script>
-  <script src="js/empire.js?v=2.4.0"></script>
-  <script src="js/phone.js?v=2.4.0"></script>
-  <script src="js/main.js?v=2.4.0"></script>
+  <script src="js/data.js?v=2.5.0"></script>
+  <script src="js/data2.js?v=2.5.0"></script>
+  <script src="js/render.js?v=2.5.0"></script>
+  <script src="js/modules.js?v=2.5.0"></script>
+  <script src="js/audio.js?v=2.5.0"></script>
+  <script src="js/game.js?v=2.5.0"></script>
+  <script src="js/life.js?v=2.5.0"></script>
+  <script src="js/label.js?v=2.5.0"></script>
+  <script src="js/world.js?v=2.5.0"></script>
+  <script src="js/ui.js?v=2.5.0"></script>
+  <script src="js/ui2.js?v=2.5.0"></script>
+  <script src="js/extras.js?v=2.5.0"></script>
+  <script src="js/empire.js?v=2.5.0"></script>
+  <script src="js/phone.js?v=2.5.0"></script>
+  <script src="js/main.js?v=2.5.0"></script>
+  <script src="js/guide.js?v=2.5.0"></script>
+  <script src="js/city2.js?v=2.5.0"></script>
 </body>
 </html>
