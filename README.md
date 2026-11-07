@@ -13,7 +13,7 @@ Desarrollado por **Julian Camilo Forero Daza**.
 
 ### Mundo abierto
 - **Ciudad:** sal del estudio y camina con flechas/WASD o haciendo clic. Entra a los edificios con `E` o con un clic:
-  - Tienda de música · Academia · Café La Corchea · Club Neón 8 · Radio FM Pixel · Parque · Bienes Raíces · Agencia de Talentos · Centro Comercial.
+  - Tienda de música · Academia · Café La Corchea · Club Neón 8 · Radio FM Pixel · Banco Pixel · Parque · Bienes Raíces · Agencia de Talentos · Centro Comercial.
 - Con bicicleta o auto te mueves más rápido.
 
 ### Vida (estilo Sims)
@@ -27,6 +27,12 @@ Desarrollado por **Julian Camilo Forero Daza**.
 - **Trabajos:** vender beats, dar clases online, mezclar para clientes, crear sample packs (ingreso pasivo), pinchar de DJ en el Club Neón y componer jingles en la Radio.
 - **Ingresos pasivos:** merch que se vende según tus fans y alquiler de tu cabina de grabación.
 - **Rutina automática** (panel Vida): comes, duermes y descansas solo cuando una barra está muy baja.
+
+### Dinero y estilo
+- **Banco Pixel:** cuenta de ahorros con intereses (nadie te la roba en la calle), CDT a 12, 24 o 48 semanas y créditos con cuota semanal automática. Si dejas de pagar 4 cuotas, el banco embarga tus ahorros.
+- **La DIAN:** cobra una vez al año solo sobre tus ganancias (ingresos menos gastos), por tramos de 0%, 4%, 8% y 12%, con tope del 5% de lo que tienes. Puedes pagar de una, contratar un contador o pagar en 4 cuotas.
+- **Séquito:** parcero, chef, chofer, estilista, fotógrafo, guardaespaldas, contador y mánager. Cada uno da un beneficio, cobra cada semana y te sigue por la ciudad (panel Vida → Séquito).
+- **Personalizar** (panel Vida): piel, color de pelo, 7 peinados, 13 prendas, gorras, cadenas y audífonos.
 
 ### Empresa
 - **Módulos:** cada propiedad tiene espacio para cuartos extra: Oficina, Cabina de grabación, Sala de ensayo, Lounge y Dormitorio. Recórrelos con ◀ ▶.
@@ -68,6 +74,7 @@ y abre http://localhost:5173.
 | `js/life.js` | Necesidades, eventos de vida, averías y premios |
 | `js/label.js` | Sello discográfico, artistas firmados y personal |
 | `js/extras.js` | Objetivos con recompensas, trabajos e ingresos pasivos |
+| `js/empire.js` | Banco, la DIAN, séquito y personalización del productor |
 | `js/ui.js`, `js/ui2.js` | Menús, paneles y ventanas |
 | `js/main.js` | Arranque y bucle principal |
 | `serve.py` | Servidor local sin caché |

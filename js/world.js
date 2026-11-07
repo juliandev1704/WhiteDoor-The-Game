@@ -11,6 +11,7 @@ const PLACES = [
   { id: 'academy', name: 'Academia de Música',     sign: 'ACADEMIA',   x: 224, y: 18, w: 50, h: 46, wall: '#83769c', roof: '#5f574f', text: '#fff1e8' },
   { id: 'realty',  name: 'Bienes Raíces Pixel',    sign: 'CASAS',      x: 280, y: 30, w: 36, h: 34, wall: '#00a83a', roof: '#007a2a', text: '#fff1e8' },
   { id: 'club',    name: 'Club Neón 8',            sign: 'CLUB',       x: 6,   y: 92, w: 56, h: 40, wall: '#1d1b2e', roof: '#0d0b1a', text: '#ff77a8' },
+  { id: 'bank',    name: 'Banco Pixel',            sign: 'BANCO',      x: 64,  y: 98, w: 28, h: 34, wall: '#e8e0d8', roof: '#1d6fb0', text: '#1d2b53' },
   { id: 'agency',  name: 'Agencia de Talentos',    sign: 'TALENTOS',   x: 114, y: 90, w: 88, h: 42, wall: '#c2c3c7', roof: '#83769c', text: '#1d2b53' },
   { id: 'mall',    name: 'Centro Comercial',       sign: 'MALL',       x: 224, y: 90, w: 92, h: 42, wall: '#ffccaa', roof: '#ff77a8', text: '#7e2553' },
   { id: 'park',    name: 'Parque Central', park: true, x: 112, y: 152, w: 92, h: 28 },
@@ -24,7 +25,6 @@ const ROADS = [
 ];
 const BLOCKERS = [
   ...PLACES.filter(p => !p.park).map(p => ({ x: p.x, y: p.y - 6, w: p.w, h: p.h + 6 })),
-  { x: 64, y: 96, w: 28, h: 36 },     // casa decorativa
   { x: 224, y: 156, w: 92, h: 22 },   // lago
   { x: 40, y: 158, w: 16, h: 12 },    // fuente
   { x: 0, y: 0, w: 320, h: 4 },
@@ -110,7 +110,7 @@ function enterStudio() {
 
 function playerSpeed() {
   const p = G.s.life.personal;
-  return p.includes('auto') ? 95 : p.includes('bici') ? 60 : 40;
+  return p.includes('auto') || hasEntourage('chofer') ? 95 : p.includes('bici') ? 60 : 40;
 }
 
 function cityClick(x, y) {
@@ -212,8 +212,6 @@ function drawCity(ctx, s, t) {
   // Lago
   R(224, 156, 92, 22, '#1d6fb0'); R(226, 158, 88, 18, '#29adff');
   for (let i = 0; i < 6; i++) R(232 + i * 14 + ((t / 400 + i) | 0) % 4, 162 + (i % 3) * 4, 5, 1, '#7fd0ff');
-  // Casa decorativa
-  R(64, 100, 28, 32, '#ffccaa'); R(62, 96, 32, 6, '#ab5236'); R(74, 120, 8, 12, '#6b3a2a'); R(67, 106, 6, 6, '#7fd0ff'); R(83, 106, 6, 6, '#7fd0ff');
 
   // Edificios
   for (const p of PLACES) if (!p.park) drawBuilding(p, t);
@@ -236,8 +234,8 @@ function drawCity(ctx, s, t) {
   people.sort((a, b) => a.y - b.y);
   for (const p of people) {
     if (p.player) {
-      if (s.life.personal.includes('auto') && (pl.path.length || Object.values(CITY.keys).some(Boolean))) drawCar(p.x - 6, p.y - 6, p.dir, '#ff77a8', true);
-      else drawWalker(p.x, p.y, p.dir, p.step, { skin: '#c48a5e', hair: '#2a1810', shirt: outfit.color, pants: '#1d2b53' }, true);
+      if ((s.life.personal.includes('auto') || hasEntourage('chofer')) && (pl.path.length || Object.values(CITY.keys).some(Boolean))) drawCar(p.x - 6, p.y - 6, p.dir, '#ff77a8', true);
+      else drawWalker(p.x, p.y, p.dir, p.step, producerWalkLook(s, outfit), true);
     } else drawWalker(p.x, p.y, p.dir, p.step, p.look, false);
   }
   // Indicador de destino
@@ -280,6 +278,7 @@ function drawBuilding(p, t) {
     R(x + w - 8, y - 22, 1, 16, '#c2c3c7'); R(x + w - 11, y - 16, 7, 1, '#c2c3c7');
     if (((t / 400) | 0) % 2) R(x + w - 9, y - 24, 3, 3, '#ff004d');
   }
+  if (p.id === 'bank') { R(x + 2, y + h - 14, 2, 14, '#c2c3c7'); R(x + w - 4, y + h - 14, 2, 14, '#c2c3c7'); R(x + 1, y + 11, w - 2, 1, '#c9a227'); }
   if (p.id === 'cafe') { for (let i = 0; i < w; i += 6) R(x + i, y + h - 18, 3, 3, i % 12 ? '#fff1e8' : '#ff004d'); }
 }
 
@@ -320,6 +319,6 @@ function drawWalker(x, y, dir, step, look, isPlayer) {
   }
   if (isPlayer) {
     R(x - 3, y - 14, 7, 1, '#1a1a1a');
-    R(x - 3, y - 11, 1, 2, '#ff004d'); R(x + 3, y - 11, 1, 2, '#ff004d');
+    R(x - 3, y - 11, 1, 2, look.ph || '#ff004d'); R(x + 3, y - 11, 1, 2, look.ph || '#ff004d');
   }
 }

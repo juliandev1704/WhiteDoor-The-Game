@@ -90,6 +90,7 @@ Object.assign(UI, {
     if (id === 'realty') return this.realty();
     if (id === 'mall') return this.mall();
     if (id === 'agency') return this.agency();
+    if (id === 'bank') return this.bank();
     this.venue(id);
   },
 
@@ -452,7 +453,8 @@ Object.assign(UI, {
     const render = () => {
       const n = s.needs;
       const bar = (label, v, low) => `<div class="bar-mini big"><span>${label}</span><i><em class="${v < (low || 25) ? 'low' : ''}" style="width:${v}%"></em></i><span>${Math.round(v)}</span></div>`;
-      let h = `<div class="life-grid"><div>
+      let h = `<div class="row life-links"><button class="btn small" data-open="look">Personalizar</button><button class="btn small" data-open="seq">Séquito (${(s.seq || []).length})</button></div>
+        <div class="life-grid"><div>
         <h3>Necesidades</h3>${bar('Energía', n.energia)}${bar('Hambre', n.hambre)}${bar('Ánimo', n.animo)}${bar('Salud', s.salud, 40)}
         <p class="muted small">Productividad actual: <b>${Math.round(workMult() * 100)}%</b>${L.inspired > 0 ? ' · Inspirado' : ''}${L.job ? ` · Trabajo de medio tiempo (${L.job} sem)` : ''}</p>
         ${s.loc === 'studio' ? `<div class="row"><button class="btn small" data-home="sleep">Dormir</button><button class="btn small" data-home="eat">Comer</button><button class="btn small" data-home="relax">Relajarte</button></div>` : '<p class="muted small">Vuelve al estudio para dormir o comer en casa (o visita el café y el parque).</p>'}
@@ -480,6 +482,7 @@ Object.assign(UI, {
     m.body.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b || b.disabled) return;
       if (b.dataset.home) { m.close(); this.homeAction(b.dataset.home); return; }
+      if (b.dataset.open) { m.close(); SFX.click(); ({ look: () => this.customize(), seq: () => this.entourage() })[b.dataset.open](); return; }
       if (b.dataset.routine) { L.routine = !L.routine; this.toast(L.routine ? 'Rutina automática activada.' : 'Rutina automática desactivada.', 'muted'); }
       if (b.dataset.fix) { m.close(); this.choice(breakdownEvent(b.dataset.fix)); return; }
       if (b.dataset.date) { activity({ cost: 60, days: 0.4, animo: 12 }); L.partner.love = clamp(L.partner.love + 10, 0, 100); this.toast(`Pasaste una linda tarde con ${L.partner.name}.`, 'good'); }

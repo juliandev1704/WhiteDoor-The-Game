@@ -614,3 +614,22 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
   body:has(.modal-wrap) #toasts { top: auto; bottom: calc(10px + env(safe-area-inset-bottom)); }
   #toasts .toast:nth-last-child(n+3) { display: none; }
 }
+
+/* ---------- v2.3: banco, séquito y personalización ---------- */
+.row.wrap { flex-wrap: wrap; }
+.life-links { flex-wrap: wrap; margin-bottom: 12px; }
+.bank-amt input { width: 100%; max-width: 260px; }
+.tax-table { display: grid; gap: 4px; max-width: 420px; }
+.tax-table div { display: flex; justify-content: space-between; gap: 12px; padding: 4px 8px; background: rgba(255,255,255,.05); }
+.custom-wrap { display: flex; gap: 16px; align-items: flex-start; }
+.custom-preview { width: 132px; height: 156px; image-rendering: pixelated; border: 3px solid #000; flex: none; position: sticky; top: 0; }
+.custom-opts { flex: 1; min-width: 0; }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatch-btn { width: 36px; height: 36px; border: 3px solid #000; cursor: pointer; padding: 0; }
+.swatch-btn.on { outline: 3px solid #ffec27; outline-offset: 1px; }
+@media (max-width: 760px) {
+  .custom-wrap { flex-direction: column; align-items: center; }
+  .custom-preview { position: static; width: 110px; height: 130px; }
+  .custom-opts { width: 100%; }
+  .swatch-btn { width: 40px; height: 40px; }
+}

@@ -47,7 +47,38 @@ const OUTFITS = [
   { id: 'rojo',   name: 'Hoodie rojo',     price: 150,  color: '#ff004d', shade: '#c00038' },
   { id: 'verde',  name: 'Hoodie verde',    price: 300,  color: '#00a83a', shade: '#007a2a' },
   { id: 'azul',   name: 'Chaqueta azul',   price: 400,  color: '#29adff', shade: '#1a7cc0' },
+  { id: 'morado', name: 'Hoodie morado',   price: 200,  color: '#83429c', shade: '#5e2e72' },
+  { id: 'rosa',   name: 'Hoodie rosado',   price: 200,  color: '#ff77a8', shade: '#d0507f' },
+  { id: 'neon',   name: 'Hoodie neón',     price: 450,  color: '#00e436', shade: '#00a82a', stripe: '#1d2b53' },
+  { id: 'depor',  name: 'Sudadera deportiva', price: 600, color: '#1d2b53', shade: '#121b38', stripe: '#fff1e8' },
+  { id: 'cuero',  name: 'Chaqueta de cuero', price: 1800, color: '#5a3a2a', shade: '#3b2418', collar: '#3b2418' },
+  { id: 'jean',   name: 'Chaqueta de jean', price: 900,  color: '#4a7ab8', shade: '#335a8a', collar: '#c2c3c7' },
+  { id: 'traje',  name: 'Traje elegante',  price: 4500, color: '#1d1b2e', shade: '#0d0b1a', collar: '#fff1e8' },
   { id: 'oro',    name: 'Chaqueta dorada', price: 6000, color: '#ffc61a', shade: '#c99510' },
+];
+// Personalización del productor
+const SKINS = ['#ffd9c0', '#ffccaa', '#e8b48a', '#c48a5e', '#9a6440', '#6b4428', '#4a2e1c'];
+const HAIR_COLORS = ['#2a1810', '#1a1210', '#6b3a2a', '#a0522d', '#c9a227', '#fff1e8', '#c2c3c7', '#ff77a8', '#29adff', '#ff004d', '#00e436', '#83429c'];
+const HAIR_STYLES = ['Corto', 'Largo', 'Afro', 'Rapado', 'Moña', 'Trenzas', 'Cresta'];
+const HATS = [
+  { id: 'gorra_n', name: 'Gorra negra',     kind: 'gorra',   price: 120,  color: '#1a1a1a', shade: '#3a3548' },
+  { id: 'gorra_r', name: 'Gorra roja',      kind: 'gorra',   price: 120,  color: '#ff004d', shade: '#c00038' },
+  { id: 'gorra_w', name: 'Gorra White Door', kind: 'gorra',  price: 300,  color: '#fff1e8', shade: '#ff77a8' },
+  { id: 'gorro',   name: 'Gorro de lana',   kind: 'gorro',   price: 90,   color: '#29adff', shade: '#1a7cc0' },
+  { id: 'gorro_m', name: 'Gorro mostaza',   kind: 'gorro',   price: 90,   color: '#c9a227', shade: '#a07e10' },
+  { id: 'bandana', name: 'Bandana',         kind: 'bandana', price: 60,   color: '#ff004d', shade: '#c00038' },
+];
+const CHAINS = [
+  { id: 'plata',    name: 'Cadena de plata',   price: 800,   color: '#c2c3c7' },
+  { id: 'oro',      name: 'Cadena de oro',     price: 2500,  color: '#ffc61a' },
+  { id: 'diamante', name: 'Cadena de diamantes', price: 15000, color: '#bff4ff', sparkle: true },
+];
+const PHONES = [
+  { id: 'rojo',   name: 'Audífonos rojos',   price: 0,    color: '#ff004d', light: '#ff77a8' },
+  { id: 'negro',  name: 'Audífonos negros',  price: 200,  color: '#2b2b3a', light: '#5f574f' },
+  { id: 'blanco', name: 'Audífonos blancos', price: 400,  color: '#e8e0d8', light: '#ffffff' },
+  { id: 'cyan',   name: 'Audífonos cian',    price: 250,  color: '#29adff', light: '#7fd0ff' },
+  { id: 'oro',    name: 'Audífonos dorados', price: 3000, color: '#ffc61a', light: '#fff1a8' },
 ];
 const PERSONAL = [
   { id: 'consola', name: 'Consola de videojuegos', price: 900,   icon: 'arcade', desc: 'Relajarte en casa da más ánimo.' },

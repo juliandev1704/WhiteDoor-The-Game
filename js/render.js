@@ -171,7 +171,7 @@ function drawControl(ctx, s, t, opts = {}) {
   drawBrokenFx(s, L, t);
   if (s.room >= 2) drawAC(L.x1 - 48, 6, t, !!s.broken.aire);
 
-  drawProducer(L.cx, t, working ? 'work' : (studying ? 'study' : 'idle'), s.life && s.life.outfit);
+  drawProducer(L.cx, t, working ? 'work' : (studying ? 'study' : 'idle'), s.life && s.life.outfit, s.life && s.life.look);
 
   // Primer plano
   if (has(s, 'inst_bateria')) drawDrums(L.x0 + 12, 166, t, working);
@@ -369,22 +369,55 @@ function drawMic(mx, tier, cx) {
 }
 
 /* ---------- Productor (de espaldas) ---------- */
-function drawProducer(cx, t, state, outfitId) {
+function drawProducer(cx, t, state, outfitId, look) {
   const bob = state === 'work' ? ((t / 180) | 0) % 2 : ((t / 700) | 0) % 2;
   const of = (typeof OUTFITS !== 'undefined' && OUTFITS.find(o => o.id === outfitId)) || { color: '#e8e0d8', shade: '#c2bab2' };
-  const hood = of.color, hood2 = of.shade, hair = '#2a1810';
+  const lk = look || {};
+  const hood = of.color, hood2 = of.shade, hair = lk.hair || '#2a1810', skin = lk.skin || '#c48a5e';
+  const phones = (typeof PHONES !== 'undefined' && PHONES.find(o => o.id === lk.phones)) || { color: '#ff004d', light: '#ff77a8' };
   const ay = state === 'work' ? ((t / 110) | 0) % 2 : 0;
+  const y = bob;
+  // pelo largo / trenzas caen sobre la espalda (detrás del torso)
+  if (lk.style === 1) R(cx - 7, 104 + y, 14, 14, hair);
+  if (lk.style === 5) for (let i = 0; i < 5; i++) R(cx - 7 + i * 3, 104 + y, 2, 12 + (i % 2) * 2, hair);
   // brazos
   R(cx - 15, 115 + ay, 4, 9, hood2); R(cx + 11, 115 + (state === 'work' ? 1 - ay : 0), 4, 9, hood2);
   // torso y capucha
   R(cx - 12, 113 + bob, 24, 14, hood); R(cx - 11, 112 + bob, 22, 1, hood);
   R(cx - 6, 110 + bob, 12, 4, hood2); R(cx - 5, 113 + bob, 10, 2, hood2);
+  if (of.collar) { R(cx - 3, 111 + y, 6, 2, of.collar); }
+  if (of.stripe) { R(cx - 12, 120 + y, 24, 2, of.stripe); }
+  if (lk.style === 1) R(cx - 6, 110 + y, 12, 6, hair);
   // cabeza
-  R(cx - 6, 98 + bob, 12, 13, hair); R(cx - 5, 97 + bob, 10, 1, hair); R(cx - 4, 110 + bob, 8, 1, '#c48a5e');
+  switch (lk.style) {
+    case 2: // afro
+      R(cx - 9, 94 + y, 18, 17, hair); R(cx - 8, 92 + y, 16, 2, hair); R(cx - 10, 97 + y, 1, 10, hair); R(cx + 9, 97 + y, 1, 10, hair); break;
+    case 3: // rapado
+      R(cx - 6, 98 + y, 12, 13, skin); R(cx - 5, 97 + y, 10, 1, skin);
+      for (let i = 0; i < 5; i++) for (let j = 0; j < 3; j++) P(cx - 5 + i * 2 + (j % 2), 98 + y + j * 2, hair); break;
+    case 4: // moña
+      R(cx - 6, 98 + y, 12, 13, hair); R(cx - 5, 97 + y, 10, 1, hair); R(cx - 3, 92 + y, 6, 5, hair); R(cx - 2, 91 + y, 4, 1, hair); break;
+    case 6: // cresta
+      R(cx - 6, 98 + y, 12, 13, skin); R(cx - 5, 97 + y, 10, 1, skin); R(cx - 2, 91 + y, 4, 20, hair); break;
+    default:
+      R(cx - 6, 98 + y, 12, 13, hair); R(cx - 5, 97 + y, 10, 1, hair);
+  }
+  R(cx - 4, 110 + bob, 8, 1, skin);
+  // gorras
+  const hat = (typeof HATS !== 'undefined' && HATS.find(o => o.id === lk.hat)) || null;
+  if (hat && hat.kind === 'gorra') { R(cx - 7, 95 + y, 14, 6, hat.color); R(cx - 3, 100 + y, 6, 2, hair); R(cx - 2, 101 + y, 4, 1, hat.shade); }
+  if (hat && hat.kind === 'gorro') { R(cx - 7, 94 + y, 14, 8, hat.color); R(cx - 7, 100 + y, 14, 2, hat.shade); R(cx - 1, 92 + y, 2, 2, hat.shade); }
+  if (hat && hat.kind === 'bandana') { R(cx - 7, 99 + y, 14, 3, hat.color); R(cx - 1, 102 + y, 2, 4, hat.color); R(cx + 1, 102 + y, 2, 3, hat.shade); }
   // audífonos
   R(cx - 6, 96 + bob, 12, 2, '#1a1a1a'); R(cx - 7, 97 + bob, 1, 4, '#1a1a1a'); R(cx + 6, 97 + bob, 1, 4, '#1a1a1a');
-  R(cx - 8, 101 + bob, 3, 7, '#ff004d'); R(cx + 5, 101 + bob, 3, 7, '#ff004d');
-  P(cx - 8, 101 + bob, '#ff77a8'); P(cx + 5, 101 + bob, '#ff77a8');
+  R(cx - 8, 101 + bob, 3, 7, phones.color); R(cx + 5, 101 + bob, 3, 7, phones.color);
+  P(cx - 8, 101 + bob, phones.light); P(cx + 5, 101 + bob, phones.light);
+  // cadena
+  const ch = (typeof CHAINS !== 'undefined' && CHAINS.find(o => o.id === lk.chain)) || null;
+  if (ch) {
+    R(cx - 7, 112 + y, 14, 1, ch.color); P(cx - 8, 113 + y, ch.color); P(cx + 7, 113 + y, ch.color);
+    if (ch.sparkle && ((t / 300) | 0) % 3 === 0) { P(cx - 4, 111 + y, '#ffffff'); P(cx + 3, 112 + y, '#ffffff'); }
+  }
   // libro cuando estudia
   if (state === 'study') {
     R(cx + 9, 106 + bob, 9, 7, '#29adff'); R(cx + 10, 107 + bob, 7, 5, '#fff1e8'); R(cx + 13, 107 + bob, 1, 5, '#c2c3c7');

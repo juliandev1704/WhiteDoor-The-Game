@@ -91,7 +91,7 @@ function weeklyLife() {
       L.loan = null;
     }
   }
-  if (s.week % 48 === 20 && s.money > 20000) UI.queue(() => UI.choice(taxEvent()));
+  if (s.week % 48 === 20) { const tx = taxEvent(); if (tx) UI.queue(() => UI.choice(tx)); }
 }
 
 /* ---------- Rutina automática (opcional, panel Vida) ----------
@@ -404,17 +404,7 @@ function lifeEvent() {
   UI.queue(() => UI.choice(e.make(s)));
 }
 
-function taxEvent() {
-  const s = G.s, tax = Math.round(s.money * 0.05);
-  return {
-    title: 'Temporada de impuestos', icon: 'coin',
-    text: `Llegó la declaración de renta. Debes pagar ${fmtMoney(tax)}.`,
-    options: [
-      { label: `Pagar ${fmtMoney(tax)}`, run() { s.money -= tax; return null; } },
-      { label: `Contratar un contador ($500)`, desc: 'Pagas la mitad de impuestos', run() { s.money -= 500 + Math.round(tax / 2); return 'El contador encontró varias deducciones.'; } },
-    ],
-  };
-}
+// taxEvent() (la DIAN) vive ahora en js/empire.js
 
 /* ---------- Premios Pixel (una vez al año) ---------- */
 function pixelAwards() {

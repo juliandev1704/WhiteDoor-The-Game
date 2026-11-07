@@ -1,6 +1,6 @@
 /* White Door — service worker: el juego funciona sin internet.
    Primero intenta la red (siempre la última versión) y si no hay conexión usa la copia guardada. */
-const CACHE = 'whitedoor-v2.2.1';
+const CACHE = 'whitedoor-v2.3.0';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 
 self.addEventListener('install', e => {
