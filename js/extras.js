@@ -275,7 +275,7 @@ Object.assign(UI, {
       h += Object.entries(JOBS).map(([id, j]) => {
         const err = jobError(id);
         const here = j.place === 'studio' ? s.loc === 'studio' : false;
-        const limit = j.perWeek ? `${j.perWeek - jobUses(id)}/${j.perWeek} esta semana` : j.cooldown ? `cada ${j.cooldown} semanas` : '';
+        const limit = j.perWeek ? `${j.perWeek} por semana (quedan ${j.perWeek - jobUses(id)})` : j.cooldown ? `cada ${j.cooldown} semanas` : '';
         let right;
         if (err) right = `<span class="muted small">${err}</span>`;
         else if (j.place !== 'studio') right = `<span class="muted small">Ve a ${PLACE_LABEL[j.place]}</span>`;

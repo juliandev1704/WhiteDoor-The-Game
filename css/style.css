@@ -600,3 +600,14 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
   #needs-actions button { font-size: 14px; padding: 5px 0; }
   #needs-actions { gap: 3px; }
 }
+
+/* v2.1.2 — tarjetas y avisos en celular */
+@media (max-width: 760px) {
+  /* El texto de la tarjeta nunca se aplasta: si el botón o el aviso no cabe al lado, baja a otra línea */
+  .card .cinfo { flex: 1 1 170px; }
+  .card .cbuy { flex: 0 1 auto; max-width: 100%; margin-left: auto; }
+  .card .cbuy .small, .card .cbuy .muted { display: inline-block; white-space: normal; }
+  /* Con una ventana abierta, los avisos van abajo para no tapar el título ni la X */
+  body:has(.modal-wrap) #toasts { top: auto; bottom: calc(10px + env(safe-area-inset-bottom)); }
+  #toasts .toast:nth-last-child(n+3) { display: none; }
+}
