@@ -299,7 +299,7 @@ Object.assign(UI, {
           <button class="btn primary small" data-wd="amt">Retirar</button><button class="btn small" data-wd="all">Retirar todo</button></div>
           <p class="muted small">Intereses ganados en total: ${fmtMoney(B.earned)}</p>`;
       } else if (cur === 'cdt') {
-        h += `<p class="muted">Un CDT congela tu dinero unas semanas a cambio de más intereses. Al vencer, todo pasa a tus ahorros. Mínimo $1.000.</p>${field}<div class="grid">` +
+        h += `<p class="muted">Un CDT congela tu dinero unas semanas a cambio de más intereses. Al vencer, todo pasa a tus ahorros. Mínimo $1.000.</p><p class="bonus">Sale solo de tus ahorros: tienes <b>${fmtMoney(B.savings)}</b> disponibles (el efectivo no se toca).</p>${field}<div class="row"><button class="btn small" data-cdtall="1" ${B.savings < 1000 ? 'disabled' : ''}>Usar todos mis ahorros</button></div><div class="grid">` +
           CDT_PLANS.map((p, i) => `<div class="card">${iconImg('coin')}<div class="cinfo"><b>CDT a ${p.weeks} semanas</b><div class="muted">Ganas ${pctTxt(p.rate)} al final</div></div>
             <div class="cbuy"><button class="btn primary small" data-cdt="${i}">Abrir</button></div></div>`).join('') + '</div>';
         h += B.cdts.length ? '<h3>Tus CDT</h3><div class="grid">' + B.cdts.map((c, i) => `<div class="card">${iconImg('gold')}<div class="cinfo"><b>${fmtMoney(c.amount)} al ${pctTxt(c.rate)}</b>
@@ -348,11 +348,12 @@ Object.assign(UI, {
         if (!v) return fail('No tienes ese dinero ahorrado.');
         B.savings -= v; s.money += v; SFX.coin(); this.toast(`Retiraste ${fmtMoney(v)}.`, 'good');
       }
+      if (b.dataset.cdtall) { const i = $('#bank-amt'); if (i) i.value = Math.floor(B.savings); return; }
       if (b.dataset.cdt) {
         const p = CDT_PLANS[+b.dataset.cdt];
         if (amt < 1000) return fail('El mínimo para un CDT es $1.000.');
-        if (s.money + B.savings < amt) return fail('No te alcanza el dinero.');
-        charge(amt); B.cdts.push({ amount: amt, rate: p.rate, left: p.weeks });
+        if (B.savings < amt) return fail(`Solo puedes meter al CDT lo que tienes ahorrado (${fmtMoney(B.savings)}). Deposita primero en Ahorros.`);
+        B.savings -= amt; B.cdts.push({ amount: amt, rate: p.rate, left: p.weeks });
         SFX.coin(); this.toast(`Abriste un CDT de ${fmtMoney(amt)} a ${p.weeks} semanas.`, 'good');
       }
       if (b.dataset.cancel) {
@@ -405,13 +406,17 @@ Object.assign(UI, {
   /* ---------- Personalizar al productor ---------- */
   customize(tab = 'cuerpo') {
     const s = G.s, L = s.life, lk = lookState(s);
-    let cur = tab;
+    let cur = tab, tryOn = null; // { kind, id, name } prenda que te estás probando
     const m = this.modal('Personalizar', '', { wide: true });
+    const tryBtn = (kind, id) => `<button class="btn small" data-try="${kind}:${id}">Probar</button>`;
     const sw = (attr, val, color, on) => `<button class="swatch-btn ${on ? 'on' : ''}" data-${attr}="${val}" style="background:${color}" aria-label="${val}"></button>`;
     const item = (kind, it, on, own, extra = '') => `<div class="card ${own ? 'owned' : ''}">${extra}<div class="cinfo"><b>${it.name}</b></div><div class="cbuy">${on ? `<button class="btn small" data-off="${kind}">Quitar</button>` :
-      own ? `<button class="btn small" data-wear-${kind}="${it.id}">Ponerse</button>` : `<button class="btn primary small" data-buy-${kind}="${it.id}" ${s.money < it.price ? 'disabled' : ''}>${it.price ? fmtMoney(it.price) : 'Gratis'}</button>`}</div></div>`;
+      own ? `<button class="btn small" data-wear-${kind}="${it.id}">Ponerse</button>` : `${tryBtn(kind, it.id)}<button class="btn primary small" data-buy-${kind}="${it.id}" ${s.money < it.price ? 'disabled' : ''}>${it.price ? fmtMoney(it.price) : 'Gratis'}</button>`}</div></div>`;
     const render = () => {
-      let h = `<div class="custom-wrap"><img class="custom-preview" src="${producerPreviewURL(s)}" alt="Tu productor"><div class="custom-opts">` +
+      const look = Object.assign({}, lk); let outfit = L.outfit;
+      if (tryOn) { if (tryOn.kind === 'outfit') outfit = tryOn.id; else look[tryOn.kind] = tryOn.id; }
+      let h = `<div class="custom-wrap"><div class="custom-side"><div class="custom-previews"><img class="custom-preview" src="${lookPreviewURL(look, outfit, 4)}" alt="Tu productor de frente"><img class="custom-preview back" src="${producerPreviewURL(s)}" alt="Tu productor de espaldas"></div>
+        ${tryOn ? `<div class="try-tag">Probándote: <b>${esc(tryOn.name)}</b><button class="btn small" data-untry="1">Quitar</button></div>` : ''}</div><div class="custom-opts">` +
         this.tabs([['cuerpo', 'Cuerpo'], ['ropa', 'Ropa'], ['acces', 'Accesorios']], cur) + `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b></div>`;
       if (cur === 'cuerpo') {
         h += `<h3>Piel</h3><div class="swatches">${SKINS.map(c => sw('skin', c, c, lk.skin === c)).join('')}</div>
@@ -420,8 +425,8 @@ Object.assign(UI, {
       } else if (cur === 'ropa') {
         h += '<div class="grid">' + OUTFITS.map(o => {
           const own = L.outfits.includes(o.id), on = L.outfit === o.id;
-          return `<div class="card ${own ? 'owned' : ''}"><span class="swatch" style="background:${o.color}"></span><div class="cinfo"><b>${o.name}</b></div><div class="cbuy">${on ? '<span class="ok">✓ Puesto</span>' : own ? `<button class="btn small" data-wear="${o.id}">Ponerse</button>` :
-            `<button class="btn primary small" data-outfit="${o.id}" ${s.money < o.price ? 'disabled' : ''}>${fmtMoney(o.price)}</button>`}</div></div>`;
+          return `<div class="card ${own ? 'owned' : ''} ${tryOn && tryOn.id === o.id ? 'trying' : ''}"><img class="outfit-prev" src="${lookPreviewURL(lk, o.id, 2)}" alt=""><div class="cinfo"><b>${o.name}</b></div><div class="cbuy">${on ? '<span class="ok">✓ Puesto</span>' : own ? `<button class="btn small" data-wear="${o.id}">Ponerse</button>` :
+            `${tryBtn('outfit', o.id)}<button class="btn primary small" data-outfit="${o.id}" ${s.money < o.price ? 'disabled' : ''}>${fmtMoney(o.price)}</button>`}</div></div>`;
         }).join('') + '</div>';
       } else {
         const own = id => L.owned.includes(id);
@@ -436,6 +441,13 @@ Object.assign(UI, {
       const b = e.target.closest('button'); if (!b || b.disabled) return;
       const d = b.dataset;
       if (d.tab) cur = d.tab;
+      if (d.try) {
+        const [kind, id] = d.try.split(':');
+        const list = kind === 'outfit' ? OUTFITS : LISTS[kind];
+        tryOn = { kind, id, name: list.find(x => x.id === id).name };
+      }
+      if (d.untry) tryOn = null;
+      if (d.outfit || d.wear || d.buyHat || d.buyChain || d.buyPhones || d.wearHat || d.wearChain || d.wearPhones) tryOn = null;
       if (d.skin) lk.skin = d.skin;
       if (d.hair) lk.hair = d.hair;
       if (d.style) lk.style = +d.style;

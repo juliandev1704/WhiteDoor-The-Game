@@ -709,3 +709,44 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
 .fx-tag { font-size: 16px; padding: 2px 8px; border: 2px solid #000; background: var(--panel2); }
 .fx-tag.bad { color: #ff9fb8; } .fx-tag.good { color: #9dffb0; }
 .stock-up { color: var(--good); } .stock-down { color: var(--bad); }
+
+/* ---------- v2.6: escenas animadas, vista previa de ropa ---------- */
+.cutscene {
+  position: fixed; inset: 0; z-index: 250; background: #000;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  animation: cs-in .3s ease-out;
+}
+.cutscene.out { opacity: 0; transition: opacity .35s ease-in; }
+@keyframes cs-in { from { opacity: 0; } to { opacity: 1; } }
+.cs-frame { position: relative; width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16 / 9; }
+.cs-frame canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+.cs-cap {
+  position: absolute; left: 50%; bottom: 6%; transform: translateX(-50%);
+  max-width: calc(100% - 32px); padding: 8px 14px; text-align: center;
+  background: rgba(13, 11, 26, .85); border: 3px solid #000; box-shadow: 0 0 0 2px #ff77a8;
+  font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 1.6vw, 15px); line-height: 1.6; color: #fff1e8;
+  opacity: 0; transition: opacity .25s;
+}
+.cs-cap.on { opacity: 1; }
+.cs-cap small { display: block; font-size: .7em; color: #c2c3c7; }
+.cs-gold { color: #ffec27; }
+.cs-skip { position: absolute; top: 10px; right: 12px; font-family: 'VT323', monospace; font-size: 18px; color: rgba(255,241,232,.55); }
+.outfit-prev { width: 60px; height: 108px; image-rendering: pixelated; border: 3px solid #000; background: #251f40; flex: none; }
+.card.trying { outline: 3px solid #ffec27; outline-offset: -3px; }
+.custom-side { position: sticky; top: 0; display: flex; flex-direction: column; gap: 8px; align-items: center; flex: none; }
+.custom-previews { display: flex; gap: 8px; align-items: flex-end; }
+.custom-preview { position: static; }
+.custom-previews .custom-preview:first-child { width: 120px; height: 216px; background: #251f40; }
+.custom-preview.back { width: 88px; height: 104px; }
+.try-tag { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: center; font-size: 15px; max-width: 220px; text-align: center; }
+@media (max-width: 760px) {
+  .custom-side { position: static; }
+  .custom-previews .custom-preview:first-child { width: 90px; height: 162px; }
+  .custom-preview.back { width: 66px; height: 78px; }
+  .outfit-prev { width: 45px; height: 81px; }
+}
+@media (orientation: portrait) {
+  .cs-frame { aspect-ratio: auto; width: 100vw; }
+  .cs-frame canvas { height: auto; aspect-ratio: 16 / 9; }
+  .cs-cap { position: static; transform: none; margin: 14px auto 0; width: fit-content; font-size: 11px; }
+}

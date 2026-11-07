@@ -97,7 +97,13 @@ const SECURITY = [
 function hasSec(id, s = G.s) { return fxState(s) && s.life.security.includes(id); }
 
 function studioRobbery() {
-  const s = G.s, cats = Object.keys(EQUIP).filter(c => s.equip[c] > 0);
+  const s = G.s;
+  if (hasSec('vigilante') && Math.random() < 0.7) {
+    s.life.blocked = (s.life.blocked || 0) + 1;
+    UI.toast('¡Tu vigilante atrapó a unos ladrones entrando al estudio! No se llevaron nada.', 'good');
+    return;
+  }
+  const cats = Object.keys(EQUIP).filter(c => s.equip[c] > 0);
   let cash = Math.min(25000, Math.round(Math.max(0, s.money) * 0.15));
   if (hasSec('caja')) cash = Math.round(cash / 2);
   const cat = cats.length && Math.random() < 0.5 ? pick(cats) : null;
@@ -105,6 +111,14 @@ function studioRobbery() {
   const lostName = cat ? EQUIP[cat][s.equip[cat]].name : null;
   if (cat) s.equip[cat]--;
   const back = () => { s.money += cash; if (cat) s.equip[cat]++; };
+  if (hasSec('seguro')) {
+    const refund = Math.round(cash * 0.75);
+    s.money += refund; if (cat) s.equip[cat]++;
+    UI.queue(() => UI.choice({ title: '¡Robaron el estudio!', icon: 'door',
+      text: `Forzaron la puerta blanca y se llevaron ${fmtMoney(cash)}${lostName ? ` y tu ${lostName}` : ''}. Tu seguro te devolvió ${fmtMoney(refund)}${lostName ? ' y repuso el equipo' : ''}.`,
+      options: [{ label: 'Menos mal que tenía seguro', run() { addNeeds({ animo: -3 }); return null; } }] }));
+    return;
+  }
   UI.queue(() => UI.choice({
     title: '¡Robaron el estudio!', icon: 'door',
     text: `Llegaste y la puerta blanca estaba forzada. Se llevaron ${fmtMoney(cash)} en efectivo${lostName ? ` y tu ${lostName}` : ''}.${hasSec('alarma') ? '' : ' Una alarma lo habría evitado.'}`,
@@ -235,7 +249,9 @@ function festivalEvent() {
     addNeeds({ energia: -35, animo: 15 });
     const fans = Math.round(200 + s.fans * 0.04);
     s.fans += fans; s.prestige += 5; F.played++; F.earned += f;
-    return `¡Rompiste en ${name}! +${fmtMoney(f)}, +${fmtNum(fans)} fans y +5 prestigio.`;
+    const msg = `¡Rompiste en ${name}! +${fmtMoney(f)}, +${fmtNum(fans)} fans y +5 prestigio.`;
+    if (typeof Cutscene !== 'undefined') Cutscene.play('gig', { big: true, name, result: msg });
+    return msg;
   };
   return {
     title: `${name} te quiere en tarima`, icon: 'speaker',
@@ -290,8 +306,12 @@ function festivalEvent() {
     fxState(s);
     weeklyInvest(s);
     const value = Object.keys(EQUIP).reduce((a, c) => a + s.equip[c], 0) + s.items.length * 0.2;
-    let rob = (0.003 + value * 0.0008) * (hasSec('alarma') ? 0.2 : 1) * (hasEntourage('guardaespaldas') ? 0.5 : 1);
-    if (s.week > 4 && Math.random() < rob) studioRobbery();
+    const robBase = 0.003 + value * 0.0008, roll = Math.random();
+    if (s.week > 4 && roll < robBase * secRobMult(s)) studioRobbery();
+    else if (s.week > 4 && roll < robBase && secRobMult(s) < 1) {
+      s.life.blocked = (s.life.blocked || 0) + 1;
+      UI.toast(pick(['Tu alarma espantó a unos ladrones anoche.', 'Intentaron forzar la puerta del estudio, pero tu seguridad los detuvo.', 'Las cámaras grabaron a alguien rondando el estudio. Se fue sin entrar.']), 'good');
+    }
     else if (s.dev && !s.dev.finished && !s.dev.leaked && s.dev.phase >= 1 && Math.random() < 0.015 * (hasSec('firewall') ? 0.15 : 1)) songLeak();
     else if (s.money > 3000 && s.week > 6 && Math.random() < 0.02) UI.queue(() => UI.choice(pick(SCAMS)(s)));
     const F = festState(s);
@@ -361,7 +381,7 @@ Object.assign(UI, {
         h += STORE247.map(it => `<div class="card">${iconImg(it.icon)}<div class="cinfo"><b>${it.name}</b><div class="muted">${it.desc}</div><div class="bonus">${it.side}</div></div>
           <div class="cbuy"><button class="btn primary small" data-buy="${it.id}" ${s.money < it.price ? 'disabled' : ''}>${fmtMoney(it.price)}</button></div></div>`).join('') + '</div>';
       } else {
-        h += '<p class="muted">Protege tu estudio de ladrones y hackers. Se compran una sola vez.</p><div class="grid">' + SECURITY.map(it => {
+        h += '<p class="muted">Protege tu estudio de ladrones y hackers. También puedes abrir este panel desde tu celular (app Seguridad) o desde tu vida.</p><div class="row"><button class="btn primary small" data-opensec="1">Ver todo: vigilante, seguro y riesgo</button></div><div class="grid">' + SECURITY.filter(it => !it.weekly).map(it => {
           const own = L.security.includes(it.id);
           return `<div class="card ${own ? 'owned' : ''}">${iconImg(it.icon)}<div class="cinfo"><b>${it.name}</b><div class="muted">${it.desc}</div></div>
             <div class="cbuy">${own ? '<span class="ok">✓ Instalado</span>' : `<button class="btn primary small" data-sec="${it.id}" ${s.money < it.price ? 'disabled' : ''}>${fmtMoney(it.price)}</button>`}</div></div>`;
@@ -372,6 +392,7 @@ Object.assign(UI, {
     m.body.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b || b.disabled) return;
       if (b.dataset.tab) { cur = b.dataset.tab; SFX.click(); render(); return; }
+      if (b.dataset.opensec) { m.close(); SFX.click(); this.security(); return; }
       if (b.dataset.buy) {
         const it = STORE247.find(x => x.id === b.dataset.buy);
         if (s.money < it.price) return;

@@ -419,13 +419,17 @@ function pixelAwards() {
     options: [
       { label: 'Ir a la ceremonia', desc: `${Math.round(chance * 100)}% de ganar`, run() {
         activity({ days: 1, energia: -10, animo: 10 });
-        if (Math.random() < chance) {
+        const win = Math.random() < chance;
+        const rivals = [artistName(), artistName()];
+        let msg = 'No ganaste esta vez, pero la nominación ya es un honor.';
+        if (win) {
           s.life.awards.push({ year: Math.floor(s.week / 48) + 1, song: best.name });
           s.prestige += 60; s.fans += Math.round(s.fans * 0.05 + 500);
-          completeGoal('premio');
-          return `¡GANASTE el Premio Pixel por "${best.name}"! +60 prestigio.`;
-        }
-        return 'No ganaste esta vez, pero la nominación ya es un honor.';
+          msg = `¡GANASTE el Premio Pixel por "${best.name}"! +60 prestigio.`;
+        } else addNeeds({ animo: -5 });
+        if (typeof Cutscene !== 'undefined') Cutscene.play('awards', { win, song: best.name, rivals }).then(() => { if (win) completeGoal('premio'); });
+        else if (win) completeGoal('premio');
+        return msg;
       } },
       { label: 'Quedarte produciendo', run() { return null; } },
     ],

@@ -250,8 +250,8 @@ Object.assign(UI, {
       } else if (cur === 'ropa') {
         h += OUTFITS.map(o => {
           const own = L.outfits.includes(o.id), on = L.outfit === o.id;
-          return `<div class="card ${own ? 'owned' : ''}"><span class="swatch" style="background:${o.color}"></span><div class="cinfo"><b>${o.name}</b>
-            <div class="muted">Se ve en el estudio y en la ciudad.</div></div><div class="cbuy">${on ? '<span class="ok">✓ Puesto</span>' : own ? `<button class="btn small" data-wear="${o.id}">Ponerse</button>` :
+          return `<div class="card ${own ? 'owned' : ''}"><img class="outfit-prev" src="${outfitPreviewURL(s, o.id)}" alt="Así te verías con ${o.name}"><div class="cinfo"><b>${o.name}</b>
+            <div class="muted">Así te verías. Se ve en el estudio y en la ciudad.</div></div><div class="cbuy">${on ? '<span class="ok">✓ Puesto</span>' : own ? `<button class="btn small" data-wear="${o.id}">Ponerse</button>` :
             `<button class="btn primary small" data-outfit="${o.id}" ${s.money < o.price ? 'disabled' : ''}>${fmtMoney(o.price)}</button>`}</div></div>`;
         }).join('');
       } else if (cur === 'obj') {
@@ -455,7 +455,7 @@ Object.assign(UI, {
     const render = () => {
       const n = s.needs;
       const bar = (label, v, low) => `<div class="bar-mini big"><span>${label}</span><i><em class="${v < (low || 25) ? 'low' : ''}" style="width:${v}%"></em></i><span>${Math.round(v)}</span></div>`;
-      let h = `<div class="row life-links"><button class="btn small" data-open="look">Personalizar</button><button class="btn small" data-open="seq">Séquito (${(s.seq || []).length})</button></div>
+      let h = `<div class="row life-links"><button class="btn small" data-open="look">Personalizar</button><button class="btn small" data-open="seq">Séquito (${(s.seq || []).length})</button><button class="btn small" data-open="sec">Seguridad</button></div>
         <div class="life-grid"><div>
         <h3>Necesidades</h3>${bar('Energía', n.energia)}${bar('Hambre', n.hambre)}${bar('Ánimo', n.animo)}${bar('Salud', s.salud, 40)}
         <p class="muted small">Productividad actual: <b>${Math.round(workMult() * 100)}%</b>${L.inspired > 0 ? ' · Inspirado' : ''}${L.job ? ` · Trabajo de medio tiempo (${L.job} sem)` : ''}</p>
@@ -484,7 +484,7 @@ Object.assign(UI, {
     m.body.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b || b.disabled) return;
       if (b.dataset.home) { m.close(); this.homeAction(b.dataset.home); return; }
-      if (b.dataset.open) { m.close(); SFX.click(); ({ look: () => this.customize(), seq: () => this.entourage() })[b.dataset.open](); return; }
+      if (b.dataset.open) { m.close(); SFX.click(); ({ look: () => this.customize(), seq: () => this.entourage(), sec: () => this.security() })[b.dataset.open](); return; }
       if (b.dataset.routine) { L.routine = !L.routine; this.toast(L.routine ? 'Rutina automática activada.' : 'Rutina automática desactivada.', 'muted'); }
       if (b.dataset.fix) { m.close(); this.choice(breakdownEvent(b.dataset.fix)); return; }
       if (b.dataset.date) { activity({ cost: 60, days: 0.4, animo: 12 }); L.partner.love = clamp(L.partner.love + 10, 0, 100); this.toast(`Pasaste una linda tarde con ${L.partner.name}.`, 'good'); }

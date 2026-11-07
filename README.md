@@ -41,10 +41,12 @@ Desarrollado por **Julian Camilo Forero Daza**.
 - **Chocheiner:** peluche legendario único ($120.000, desde el Estudio en local). Sube velocidad, fases, ambiente y ánimo.
 - **Merch:** se vende según tu éxito actual (canciones sonando, nota y listas), el precio sube con tu prestigio y el mercado se satura si lo inundas. Lotes de 50 a 5.000 unidades, más baratos por volumen.
 - **Celular** (botón sobre la escena o tecla `T`): guarda o saca plata del banco en un toque, pide comida a domicilio (PixelEats), toma un taxi a cualquier lugar y compra en línea (Do Re Mi con 20% de envío, Pixel Mall, Casas y Talentos). También abre mensajes, séquito, estilo, objetivos y trabajos.
-- **Banco Pixel:** cuenta de ahorros con intereses (nadie te la roba en la calle), CDT a 12, 24 o 48 semanas y créditos con cuota semanal automática. Si dejas de pagar 4 cuotas, el banco embarga tus ahorros.
+- **Banco Pixel:** cuenta de ahorros con intereses (nadie te la roba en la calle), CDT a 12, 24 o 48 semanas (solo con la plata que ya tienes ahorrada) y créditos con cuota semanal automática. Si dejas de pagar 4 cuotas, el banco embarga tus ahorros.
 - **La DIAN:** cobra una vez al año solo sobre tus ganancias (ingresos menos gastos), por tramos de 0%, 4%, 8% y 12%, con tope del 5% de lo que tienes. Puedes pagar de una, contratar un contador o pagar en 4 cuotas.
 - **Séquito:** parcero, chef, chofer, estilista, fotógrafo, guardaespaldas, contador y mánager. Cada uno da un beneficio, cobra cada semana y te sigue por la ciudad (panel Vida → Séquito).
-- **Personalizar** (panel Vida): piel, color de pelo, 7 peinados, 13 prendas, gorras, cadenas y audífonos.
+- **Personalizar** (panel Vida): piel, color de pelo, 7 peinados, 13 prendas, gorras, cadenas y audífonos. Cada prenda muestra cómo te verías y puedes **probártela** antes de comprarla.
+- **Escenas animadas:** la ceremonia de los Premios Pixel (ganes o pierdas), dormir en tu cuarto cuando tienes Dormitorio, tus sets de DJ en el Club Neón 8 y tus shows en festivales. Toca la pantalla para saltarlas.
+- **Seguridad del estudio** (celular → Seguridad, panel Vida o Tienda 24/7): cerradura, alarma con cámaras, firewall, caja fuerte, vigilante nocturno y seguro contra robos. Lo instalado se ve en el estudio y te avisa cuando frena un robo.
 
 ### Empresa
 - **Módulos:** cada propiedad tiene espacio para cuartos extra: Oficina, Cabina de grabación, Sala de ensayo, Lounge y Dormitorio. Recórrelos con ◀ ▶.
@@ -90,6 +92,7 @@ y abre http://localhost:5173.
 | `js/phone.js` | El celular y sus apps |
 | `js/guide.js` | Pantalla de carga, creación del personaje y ayuda de cada menú |
 | `js/city2.js` | Tienda 24/7, seguridad del estudio, Bolsa, negocios, festivales y el Chocheiner |
+| `js/scenes.js` | Escenas animadas (premios, dormir, toques), el productor de frente, vista previa de ropa y panel de seguridad |
 | `js/ui.js`, `js/ui2.js` | Menús, paneles y ventanas |
 | `js/main.js` | Arranque y bucle principal |
 | `serve.py` | Servidor local sin caché |
