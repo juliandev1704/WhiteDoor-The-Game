@@ -1,0 +1,19 @@
+{
+  "name": "White Door — Music Studio Tycoon",
+  "short_name": "White Door",
+  "description": "Juego tycoon 8-bit de estudio musical. Desarrollado por Julian Camilo Forero Daza.",
+  "lang": "es",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d0b1a",
+  "theme_color": "#1b1730",
+  "categories": ["games", "music"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

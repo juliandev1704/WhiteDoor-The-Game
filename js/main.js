@@ -186,3 +186,8 @@ window.addEventListener('beforeunload', () => { if (G.running) saveGame(); });
 fit();
 showTitle();
 requestAnimationFrame(frame);
+
+// App instalable y sin internet (PWA)
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}

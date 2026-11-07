@@ -47,6 +47,12 @@ python serve.py
 
 y abre http://localhost:5173.
 
+## Jugar en el celular
+
+- **En línea:** https://juliandev1704.github.io/WhiteDoor-The-Game/
+- **Instalar como app:** abre el enlace en Chrome (Android) → menú ⋮ → *Agregar a la pantalla principal* / *Instalar app*. En iPhone: Safari → Compartir → *Agregar a inicio*. Se abre en pantalla completa y funciona sin internet.
+- **APK:** genera el paquete Android desde https://www.pwabuilder.com con la URL del juego.
+
 ## Estructura
 
 | Archivo | Contenido |
@@ -65,3 +71,4 @@ y abre http://localhost:5173.
 | `js/ui.js`, `js/ui2.js` | Menús, paneles y ventanas |
 | `js/main.js` | Arranque y bucle principal |
 | `serve.py` | Servidor local sin caché |
+| `manifest.webmanifest`, `sw.js`, `icons/` | App instalable (PWA) y modo sin internet |
