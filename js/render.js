@@ -23,6 +23,14 @@ const FONT = {
   S: ['011', '100', '010', '001', '110'], T: ['111', '010', '010', '010', '010'],
   U: ['101', '101', '101', '101', '111'], V: ['101', '101', '101', '101', '010'],
   W: ['101', '101', '111', '111', '101'], Y: ['101', '101', '010', '010', '010'],
+  J: ['001', '001', '001', '101', '010'], Q: ['010', '101', '101', '110', '011'],
+  X: ['101', '101', '010', '101', '101'], Z: ['111', '001', '010', '100', '111'],
+  0: ['111', '101', '101', '101', '111'], 1: ['010', '110', '010', '010', '111'],
+  2: ['110', '001', '010', '100', '111'], 3: ['110', '001', '010', '001', '110'],
+  4: ['101', '101', '111', '001', '001'], 5: ['111', '100', '110', '001', '110'],
+  6: ['011', '100', '111', '101', '111'], 7: ['111', '001', '010', '010', '010'],
+  8: ['111', '101', '111', '101', '111'], 9: ['111', '101', '111', '001', '110'],
+  '-': ['000', '000', '111', '000', '000'], '.': ['000', '000', '000', '000', '010'],
   ' ': ['000', '000', '000', '000', '000'],
 };
 function pixText(str, x, y, c) {
@@ -64,9 +72,16 @@ function drawNote(x, y, c) { R(x, y, 2, 2, c); R(x + 1, y - 4, 1, 4, c); P(x + 2
 let lastNoteT = 0;
 function drawScene(ctx, s, t, opts = {}) {
   X = ctx;
+  if (s.loc === 'city') return drawCity(ctx, s, t);
+  const view = s.view || 0;
+  if (view > 0 && s.modules[view - 1]) return drawModuleScene(ctx, s, s.modules[view - 1], view - 1, t, opts);
+  drawControl(ctx, s, t, opts);
+}
+function drawControl(ctx, s, t, opts = {}) {
+  X = ctx;
   const L = layout(s), st = ROOM_STYLE[s.room];
   const dev = s.dev;
-  const working = !!(dev && !dev.finished) && !opts.frozen;
+  const working = canWork(s) && !opts.frozen;
   const singing = working && dev.artist && dev.phase === 1 && dev.prog <= dev.weeksTotal;
   const studying = !!s.study;
 
@@ -144,10 +159,19 @@ function drawScene(ctx, s, t, opts = {}) {
   if (dev && dev.artist) {
     drawPerson(L.mx - 14, 148, dev.artist.look, t, singing);
   }
+  if (s.roster && s.roster.length) { // co-productores junto a la consola
+    const cops = s.roster.filter(a => a.task === 'coproducir' && !(dev && dev.rosterId === a.id));
+    if (cops[0] && !(dev && dev.artist)) drawPerson(L.mx - 14, 148, cops[0].look, t, working);
+    else if (cops[0]) drawPerson(L.cx + 26, 150, cops[0].look, t, working);
+  }
   drawMic(L.mx, s.equip.mic, L.cx);
 
   // Productor
-  drawProducer(L.cx, t, working ? 'work' : (studying ? 'study' : 'idle'));
+  // Averías
+  drawBrokenFx(s, L, t);
+  if (s.room >= 2) drawAC(L.x1 - 48, 6, t, !!s.broken.aire);
+
+  drawProducer(L.cx, t, working ? 'work' : (studying ? 'study' : 'idle'), s.life && s.life.outfit);
 
   // Primer plano
   if (has(s, 'inst_bateria')) drawDrums(L.x0 + 12, 166, t, working);
@@ -178,6 +202,7 @@ function drawScene(ctx, s, t, opts = {}) {
   R(L.x0, 0, 3, 180, 'rgba(0,0,0,.35)');
   R(L.x1 - 3, 0, 3, 180, 'rgba(0,0,0,.35)');
   R(0, 174, SCENE_W, 6, 'rgba(0,0,0,.25)');
+  if (s.broken && s.broken.luz && ((t / 140) | 0) % 5 !== 0) R(0, 0, SCENE_W, SCENE_H, 'rgba(5,4,15,.45)');
 }
 
 /* ---------- Ventana con ciudad de noche ---------- */
@@ -344,9 +369,10 @@ function drawMic(mx, tier, cx) {
 }
 
 /* ---------- Productor (de espaldas) ---------- */
-function drawProducer(cx, t, state) {
+function drawProducer(cx, t, state, outfitId) {
   const bob = state === 'work' ? ((t / 180) | 0) % 2 : ((t / 700) | 0) % 2;
-  const hood = '#e8e0d8', hood2 = '#c2bab2', hair = '#2a1810';
+  const of = (typeof OUTFITS !== 'undefined' && OUTFITS.find(o => o.id === outfitId)) || { color: '#e8e0d8', shade: '#c2bab2' };
+  const hood = of.color, hood2 = of.shade, hair = '#2a1810';
   const ay = state === 'work' ? ((t / 110) | 0) % 2 : 0;
   // brazos
   R(cx - 15, 115 + ay, 4, 9, hood2); R(cx + 11, 115 + (state === 'work' ? 1 - ay : 0), 4, 9, hood2);

@@ -61,7 +61,7 @@ const UI = {
   refresh() {
     const s = G.s;
     if (!s) return;
-    $('#t-date').textContent = dateLabel(s.week);
+    $('#t-date').textContent = dateLabel(s);
     const mo = $('#t-money');
     mo.textContent = fmtMoney(s.money);
     mo.classList.toggle('neg', s.money < 0);
@@ -73,6 +73,11 @@ const UI = {
     $('#t-trend').textContent = 'Tendencia: ' + GENRES[s.trend.genre].name;
     const ib = $('#b-inbox .badge');
     ib.textContent = s.offers.length; ib.hidden = !s.offers.length;
+    const lb = $('#b-label .badge');
+    const unhappy = s.roster.filter(a => a.mood < 25 || a.energy < 15).length;
+    lb.textContent = unhappy; lb.hidden = !unhappy;
+    $('#b-city span').textContent = s.loc === 'city' ? 'Ir al estudio' : 'Ciudad';
+    this.updateNeeds(); this.updateNav();
     const pb = $('#b-producer .badge');
     pb.textContent = s.skillPts; pb.hidden = !s.skillPts;
     document.querySelectorAll('[data-speed]').forEach(b => {
@@ -89,9 +94,12 @@ const UI = {
       const total = d.weeksTotal + d.extra;
       const polishing = d.prog > d.weeksTotal;
       dp.hidden = false;
+      const why = d.finished ? '' : s.loc !== 'studio' ? 'En pausa: estás fuera del estudio' : s.broken.pc ? 'En pausa: el computador está dañado' : '';
       dp.innerHTML = `<div class="dp-title">"${esc(d.name)}"</div>
         <div class="dp-sub">${GENRES[d.genre].name} · ${polishing ? 'Puliendo mezcla' : 'Fase: ' + PHASES[d.phase].name}${d.artist ? ' · ' + esc(d.artist.name) : ''}</div>
+        ${why ? `<div class="dp-warn">${why}</div>` : ''}
         <div class="bar"><div class="fill" style="width:${(d.prog / total * 100).toFixed(1)}%"></div></div>
+        ${coproducers().length ? `<div class="dp-copro">Co-producen: ${coproducers().map(a => esc(a.name)).join(', ')} (+${coproBonus(d.genre).toFixed(0)} pts/sem)</div>` : ''}
         <div class="dp-stats"><span class="c-cre">CRE ${Math.round(d.cre)}</span><span class="c-tec">TEC ${Math.round(d.tec)}</span><span class="c-noise">RUIDO ${Math.round(d.noise)}</span></div>`;
     } else if (s && s.study) {
       const c = COURSE_BY_ID[s.study.id];
@@ -105,7 +113,7 @@ const UI = {
   /* ---------- Burbujas de puntos ---------- */
   bubble(kind, v) { this._bub[kind] += v; },
   flushBubbles() {
-    if (!G.s || !G.s.dev) { this._bub = { cre: 0, tec: 0, noise: 0 }; return; }
+    if (!G.s || !G.s.dev || G.s.loc !== 'studio' || G.s.view) { this._bub = { cre: 0, tec: 0, noise: 0 }; return; }
     const L = layout(G.s);
     let i = 0;
     for (const k of ['cre', 'tec', 'noise']) {
@@ -140,8 +148,9 @@ const UI = {
       genre: offer ? offer.artist.genre : (s.genres.includes(s.trend.genre) ? s.trend.genre : s.genres[0]),
       topic: pick(s.topics), size: 'sencillo',
       sliders: [[50, 50, 50], [50, 50, 50], [50, 50, 50]],
-      offerId: offer ? offer.id : null,
+      offerId: offer ? offer.id : null, rosterId: null,
     };
+    const rosterOK = s.roster.filter(a => a.task !== 'gira');
     const m = this.modal(offer ? `Contrato con ${esc(offer.artist.name)}` : 'Nueva canción', '', { wide: true });
     let step = 1;
 
@@ -156,10 +165,14 @@ const UI = {
 
     const step1 = () => `
       ${offer ? `<div class="artist-line"><img class="portrait sm" src="${portraitURL(offer.artist.look)}"><div><b>${esc(offer.artist.name)}</b><br><span class="muted">${ARTIST_TIERS[offer.artist.tier].name} · ${fmtNum(offer.artist.fans)} fans · pide nota ${offer.minScore}+</span></div></div>` : ''}
+      ${!offer && rosterOK.length ? `<div class="field"><label>Artista</label><div class="chips">
+        <button class="chip ${!cfg.rosterId ? 'on' : ''}" data-roster="0">White Door (tú)</button>
+        ${rosterOK.map(a => `<button class="chip ${cfg.rosterId === a.id ? 'on' : ''}" data-roster="${a.id}" ${s.genres.includes(a.genre) ? '' : 'disabled'}>${esc(a.name)} · ${GENRES[a.genre].name}</button>`).join('')}
+      </div></div>` : ''}
       <div class="field"><label>Nombre de la canción</label>
         <div class="row"><input id="ns-name" maxlength="32" value="${esc(cfg.name)}"><button class="btn small" data-a="dice">Aleatorio</button></div></div>
-      <div class="field"><label>Género${offer ? ' (elegido por el artista)' : ''}</label><div class="chips">
-        ${s.genres.map(g => `<button class="chip ${cfg.genre === g ? 'on' : ''}" data-genre="${g}" ${offer && g !== cfg.genre ? 'disabled' : ''} style="--gc:${GENRES[g].color}"><i></i>${GENRES[g].name}${s.trend.genre === g ? ' ▲' : ''}</button>`).join('')}
+      <div class="field"><label>Género${offer || cfg.rosterId ? ' (el del artista)' : ''}</label><div class="chips">
+        ${s.genres.map(g => `<button class="chip ${cfg.genre === g ? 'on' : ''}" data-genre="${g}" ${(offer || cfg.rosterId) && g !== cfg.genre ? 'disabled' : ''} style="--gc:${GENRES[g].color}"><i></i>${GENRES[g].name}${s.trend.genre === g ? ' ▲' : ''}</button>`).join('')}
       </div></div>
       <div class="field"><label>Tema</label><div class="chips">
         ${s.topics.map(t => { const k = s.combosKnown[cfg.genre + '|' + t]; return `<button class="chip ${cfg.topic === t ? 'on' : ''} ${k ? 'k-' + k : ''}" data-topic="${t}">${TOPICS[t].name}</button>`; }).join('')}
@@ -168,6 +181,7 @@ const UI = {
         ${Object.entries(SIZES).map(([k, z]) => { const locked = z.flag && !s.flags[z.flag]; return `<button class="chip ${cfg.size === k ? 'on' : ''}" data-size="${k}" ${locked ? 'disabled' : ''}>${z.name} · ${z.weeks} sem${z.cost ? ' · ' + fmtMoney(z.cost) : ''}${locked ? ' 🔒' : ''}</button>`; }).join('')}
       </div></div>
       <div class="combo-hint">${comboHint()}</div>
+      ${s.roster.some(a => a.task === 'coproducir') ? `<p class="muted small">Co-productores: ${s.roster.filter(a => a.task === 'coproducir').map(a => esc(a.name)).join(', ')} (+${coproBonus(cfg.genre).toFixed(1)} puntos por semana)</p>` : ''}
       <div class="row end"><button class="btn" data-a="cancel">Cancelar</button><button class="btn primary" data-a="next">Siguiente ▶</button></div>`;
 
     const step2 = () => {
@@ -200,7 +214,11 @@ const UI = {
       const b = e.target.closest('button');
       if (!b || b.disabled) return;
       SFX.click();
-      if (b.dataset.genre) { cfg.genre = b.dataset.genre; render(); }
+      if (b.dataset.roster !== undefined) {
+        const r = s.roster.find(a => a.id === +b.dataset.roster);
+        cfg.rosterId = r ? r.id : null; if (r) cfg.genre = r.genre; render();
+      }
+      else if (b.dataset.genre) { cfg.genre = b.dataset.genre; render(); }
       else if (b.dataset.topic) { cfg.topic = b.dataset.topic; render(); }
       else if (b.dataset.size) { cfg.size = b.dataset.size; render(); }
       else if (b.dataset.a === 'dice') { cfg.name = randomSongName(); render(); }
@@ -338,20 +356,21 @@ const UI = {
     if (it.amb) out.push(`Ambiente +${it.amb}`);
     return out.join(' · ');
   },
-  card(it, state, attr) {
+  card(it, state, attr, online) {
     const s = G.s;
+    const price = Math.round(it.price * (online ? 1.2 : 1));
     let right;
     if (state === 'owned') right = '<span class="ok">✓ Tuyo</span>';
     else if (state === 'locked') right = `<span class="warn small">Requiere<br>${ROOMS[it.room].name}</span>`;
-    else right = `<button class="btn primary small" ${attr} ${s.money < it.price ? 'disabled' : ''}>${fmtMoney(it.price)}</button>`;
+    else right = `<button class="btn primary small" ${attr} ${s.money < price ? 'disabled' : ''}>${fmtMoney(price)}</button>`;
     return `<div class="card ${state}">${iconImg(it.icon)}<div class="cinfo"><b>${it.name}</b>
       <div class="muted">${it.desc}</div><div class="bonus">${this.bonusText(it)}</div></div><div class="cbuy">${right}</div></div>`;
   },
 
-  shop(tab = 'equipo') {
+  shop(tab = 'equipo', online = false) {
     const s = G.s;
     let cur = tab;
-    const m = this.modal('Tienda', '', { wide: true });
+    const m = this.modal(online ? 'Tienda online (+20% envío)' : 'Tienda de música Do Re Mi', '', { wide: true });
     const render = () => {
       let h = this.tabs([['equipo', 'Equipo'], ['inst', 'Instrumentos'], ['soft', 'Software']], cur) + `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b></div>`;
       if (cur === 'equipo') {
@@ -360,14 +379,14 @@ const UI = {
           EQUIP[cat].forEach((it, tier) => {
             if (tier === 0) return;
             const state = tier <= s.equip[cat] ? 'owned' : (it.room && s.room < it.room ? 'locked' : 'buy');
-            h += this.card(it, state, `data-equip="${cat}:${tier}"`);
+            h += this.card(it, state, `data-equip="${cat}:${tier}"`, online);
           });
           h += '</div>';
         }
       } else {
         h += '<div class="grid">' + GEAR.filter(g => g.cat === cur).map(it => {
           const state = s.items.includes(it.id) ? 'owned' : (it.room && s.room < it.room ? 'locked' : 'buy');
-          return this.card(it, state, `data-item="${it.id}"`);
+          return this.card(it, state, `data-item="${it.id}"`, online);
         }).join('') + '</div>';
       }
       m.set(h);
@@ -376,8 +395,8 @@ const UI = {
       const b = e.target.closest('button'); if (!b || b.disabled) return;
       if (b.dataset.tab) { SFX.click(); cur = b.dataset.tab; render(); return; }
       let err = null, name = '';
-      if (b.dataset.equip) { const [c, t] = b.dataset.equip.split(':'); err = buyEquip(c, +t); name = EQUIP[c][+t].name; }
-      else if (b.dataset.item) { err = buyItem(b.dataset.item); name = GEAR_BY_ID[b.dataset.item].name; }
+      if (b.dataset.equip) { const [c, t] = b.dataset.equip.split(':'); err = buyEquip(c, +t, online); name = EQUIP[c][+t].name; }
+      else if (b.dataset.item) { err = buyItem(b.dataset.item, online); name = GEAR_BY_ID[b.dataset.item].name; }
       else return;
       if (err) { this.toast(err, 'bad'); SFX.bad(); }
       else { this.toast(`Compraste: ${name}`, 'good'); SFX.coin(); }
@@ -535,6 +554,8 @@ const UI = {
   menu() {
     const m = this.modal('Menú', `<div class="menu-list">
       <button class="btn" data-a="save">Guardar partida</button>
+      <button class="btn" data-a="online">Tienda online (+20% envío)</button>
+      <button class="btn" data-a="academy">Academia online</button>
       <button class="btn" data-a="sound">Efectos: ${SFX.on ? 'ON' : 'OFF'}</button>
       <button class="btn" data-a="music">Música: ${SFX.music ? 'ON' : 'OFF'}</button>
       <button class="btn" data-a="help">Cómo jugar</button>
@@ -546,6 +567,8 @@ const UI = {
       SFX.click();
       const a = b.dataset.a;
       if (a === 'save') { saveGame(); this.toast('Partida guardada', 'good'); }
+      if (a === 'online') { m.close(); this.shop('equipo', true); }
+      if (a === 'academy') { m.close(); this.academy(); }
       if (a === 'sound') { SFX.on = !SFX.on; b.textContent = 'Efectos: ' + (SFX.on ? 'ON' : 'OFF'); }
       if (a === 'music') {
         SFX.music = !SFX.music; b.textContent = 'Música: ' + (SFX.music ? 'ON' : 'OFF');
@@ -567,11 +590,12 @@ const UI = {
         <ul>
           <li>${iconImg('note')} <b>Nueva canción:</b> elige nombre, género, tema y reparte tu enfoque en las 3 fases. Cada género valora cosas distintas: ¡experimenta!</li>
           <li>${iconImg('mail')} <b>Bandeja:</b> los artistas te escriben para producirles. Te pagan y, si la nota es alta, ¡bono extra!</li>
-          <li>${iconImg('mic')} <b>Tienda:</b> mejores micrófonos, computadores e instrumentos = más puntos por semana.</li>
-          <li>${iconImg('house')} <b>Estudio:</b> múdate a espacios más grandes y decóralos. El ambiente te hace más productivo y atrae estrellas.</li>
-          <li>${iconImg('book')} <b>Academia:</b> aprende nuevos géneros y mejora tus habilidades.</li>
+          <li>${iconImg('door')} <b>Ciudad:</b> sal del estudio y camina (flechas/WASD o clic). Ahí están la tienda, la academia, el café, el club, la radio, bienes raíces, la agencia de talentos y el centro comercial.</li>
+          <li>${iconImg('fans')} <b>Vida:</b> duerme, come y relájate. Si descuidas tus necesidades rindes menos y puedes terminar en el hospital. ¡Y toma decisiones de vida!</li>
+          <li>${iconImg('gold')} <b>Sello:</b> funda White Door Records, firma artistas, entrénalos y ponlos a grabar, girar o ayudarte a producir.</li>
+          <li>${iconImg('pc')} <b>Personal:</b> compra una Oficina y contrata asistentes, ingenieros, productores y mánagers. Los verás trabajar en tu estudio.</li>
         </ul>
-        <p class="muted">Cada semana pagas arriendo. Si pasas 12 semanas en números rojos, quiebras. Las críticas comparan cada canción con tus mejores trabajos: ¡sigue mejorando!</p>
+        <p class="muted">Las cosas se dañan: repáralas tú o llama a un técnico. Cada semana pagas arriendo y salarios; con 12 semanas en números rojos, quiebras. Usa las flechas ◀ ▶ de la pantalla para recorrer los cuartos de tu estudio.</p>
         <div class="row end"><button class="btn primary" data-a="ok">${first ? '¡A producir!' : 'Entendido'}</button></div>
       </div>`, { wide: true });
     m.body.addEventListener('click', e => { if (e.target.closest('[data-a="ok"]')) { SFX.click(); m.close(); } });

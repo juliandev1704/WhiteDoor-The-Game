@@ -36,15 +36,37 @@
         <canvas id="scene" width="320" height="180"></canvas>
         <div id="fx"></div>
         <div id="devpanel" hidden></div>
+        <div id="needs">
+          <div class="need"><span>Energía</span><i><em id="n-energia"></em></i><b id="v-energia"></b></div>
+          <div class="need"><span>Hambre</span><i><em id="n-hambre"></em></i><b id="v-hambre"></b></div>
+          <div class="need"><span>Ánimo</span><i><em id="n-animo"></em></i><b id="v-animo"></b></div>
+          <div class="need"><span>Salud</span><i><em id="n-salud"></em></i><b id="v-salud"></b></div>
+          <div id="n-insp" class="insp" hidden>Inspirado</div>
+          <div id="needs-actions">
+            <button data-home="sleep" title="Dormir">Dormir</button>
+            <button data-home="eat" title="Comer de la nevera">Comer</button>
+            <button data-home="relax" title="Relajarte un rato">Relajar</button>
+          </div>
+        </div>
+        <div id="viewnav" hidden>
+          <button id="nav-prev" aria-label="Cuarto anterior">◀</button>
+          <span id="view-name"></span>
+          <button id="nav-next" aria-label="Cuarto siguiente">▶</button>
+        </div>
+        <button id="prompt" hidden></button>
+        <div id="fade"></div>
       </div>
     </main>
 
     <nav id="actions">
       <button id="b-song" class="act primary"><span>Nueva canción</span></button>
       <button id="b-inbox" class="act"><span>Bandeja</span><em class="badge" hidden></em></button>
-      <button id="b-shop" class="act"><span>Tienda</span></button>
-      <button id="b-studio" class="act"><span>Estudio</span></button>
-      <button id="b-academy" class="act"><span>Academia</span></button>
+      <button id="b-city" class="act"><span>Ciudad</span></button>
+      <button id="b-goals" class="act"><span>Objetivos</span><em class="badge" hidden></em></button>
+      <button id="b-jobs" class="act"><span>Trabajos</span></button>
+      <button id="b-label" class="act"><span>Sello</span><em class="badge" hidden></em></button>
+      <button id="b-staff" class="act"><span>Personal</span></button>
+      <button id="b-life" class="act"><span>Vida</span></button>
       <button id="b-producer" class="act"><span>Productor</span><em class="badge" hidden></em></button>
       <button id="b-disco" class="act"><span>Discografía</span></button>
       <button id="b-menu" class="act"><span>Menú</span></button>
@@ -69,10 +91,17 @@
   <div id="toasts"></div>
 
   <script src="js/data.js"></script>
+  <script src="js/data2.js"></script>
   <script src="js/render.js"></script>
+  <script src="js/modules.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/game.js"></script>
+  <script src="js/life.js"></script>
+  <script src="js/label.js"></script>
+  <script src="js/world.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/ui2.js"></script>
+  <script src="js/extras.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
