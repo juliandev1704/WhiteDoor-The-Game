@@ -644,6 +644,8 @@ const ICONS = {
          'yyoyyoyyyoyy', 'yyoyoooyyoyy', '.yoyyoyyyoy.', '.yyoooooooy.', '..yyyyyyyy..', '....yyyy....'],
   fans: ['............', '..pp...pp...', '.pppp.pppp..', 'pppppppppppp', 'pppppppppppp', 'pppppppppppp',
          '.pppppppppp.', '..pppppppp..', '...pppppp...', '....pppp....', '.....pp.....', '............'],
+  cel: ['...kkkkkk...', '..kddddddk..', '..kdkggkdk..', '..kbbbbbbk..', '..kbpbbybk..', '..kbbbbbbk..',
+        '..kblbbrbk..', '..kbbbbbbk..', '..kbbbbbbk..', '..kddddddk..', '..kddwwddk..', '...kkkkkk...'],
 };
 const iconCache = {};
 function iconURL(name, scale = 3) {

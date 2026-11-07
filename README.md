@@ -29,6 +29,7 @@ Desarrollado por **Julian Camilo Forero Daza**.
 - **Rutina automática** (panel Vida): comes, duermes y descansas solo cuando una barra está muy baja.
 
 ### Dinero y estilo
+- **Celular** (botón sobre la escena o tecla `T`): guarda o saca plata del banco en un toque, pide comida a domicilio (PixelEats), toma un taxi a cualquier lugar y compra en línea (Do Re Mi con 20% de envío, Pixel Mall, Casas y Talentos). También abre mensajes, séquito, estilo, objetivos y trabajos.
 - **Banco Pixel:** cuenta de ahorros con intereses (nadie te la roba en la calle), CDT a 12, 24 o 48 semanas y créditos con cuota semanal automática. Si dejas de pagar 4 cuotas, el banco embarga tus ahorros.
 - **La DIAN:** cobra una vez al año solo sobre tus ganancias (ingresos menos gastos), por tramos de 0%, 4%, 8% y 12%, con tope del 5% de lo que tienes. Puedes pagar de una, contratar un contador o pagar en 4 cuotas.
 - **Séquito:** parcero, chef, chofer, estilista, fotógrafo, guardaespaldas, contador y mánager. Cada uno da un beneficio, cobra cada semana y te sigue por la ciudad (panel Vida → Séquito).
@@ -39,7 +40,7 @@ Desarrollado por **Julian Camilo Forero Daza**.
 - **Personal:** asistentes, ingenieros de sonido, productores, mánagers y community managers. Trabajan en segundo plano y los ves en sus escritorios.
 - **White Door Records:** funda tu sello, firma artistas y ponlos a entrenar, grabar con tus productores, salir de gira o co-producir contigo (más puntos y menos ruido; el artista de la canción siempre ayuda).
 
-Atajos de teclado: `Espacio` pausa · `1` `2` `3` cambian la velocidad · `Esc` cierra ventanas · `◀ ▶` cambian de cuarto · `E` entra a un edificio.
+Atajos de teclado: `Espacio` pausa · `1` `2` `3` cambian la velocidad · `Esc` cierra ventanas · `◀ ▶` cambian de cuarto · `E` entra a un edificio · `T` saca el celular.
 
 La partida se guarda sola en el navegador (localStorage). Las partidas de la versión 1 se convierten automáticamente.
 
@@ -75,6 +76,7 @@ y abre http://localhost:5173.
 | `js/label.js` | Sello discográfico, artistas firmados y personal |
 | `js/extras.js` | Objetivos con recompensas, trabajos e ingresos pasivos |
 | `js/empire.js` | Banco, la DIAN, séquito y personalización del productor |
+| `js/phone.js` | El celular y sus apps |
 | `js/ui.js`, `js/ui2.js` | Menús, paneles y ventanas |
 | `js/main.js` | Arranque y bucle principal |
 | `serve.py` | Servidor local sin caché |
