@@ -5,6 +5,22 @@
    festivales y el Chocheiner
    ========================================================= */
 
+/* ---------- Sprites de la tienda y de Stiwai ---------- */
+Object.assign(ICONS, {
+  cafe: ['....w..w....', '...w..w.....', '....w..w....', '............', '.wwwwwwww...', '.wmmmmmmwww.', '.wmmmmmmw.w.', '.wwwwwwwwww.', '.wwwwwwww...', '..wwwwww....', '.gggggggggg.', '............'],
+  iso: ['....gggg....', '....kkkk....', '...bbbbbb...', '...bwbbbb...', '...bwbbbb...', '...bbbbbb...', '...wwwwww...', '...wbbbbw...', '...wwwwww...', '...bwbbbb...', '...bbbbbb...', '....bbbb....'],
+  energy: ['...gggggg...', '..gddddddg..', '..kkkkkkkk..', '..klllllek..', '..kllylllk..', '..klyyllek..', '..klyyyyek..', '..kllyylek..', '..kllyllek..', '..klllllek..', '..kkkkkkkk..', '...gggggg...'],
+  vitaminas: ['...wwwwww...', '...wwwwww...', '...gggggg...', '..oooooooo..', '..owwwwwwo..', '..owrrrrwo..', '..owwwwwwo..', '..oooooooo..', '..oooooooo..', '..oooooooo..', '...oooooo...', '............'],
+  cerveza: ['.....gg.....', '.....mm.....', '.....mm.....', '....mmmm....', '...mmmmmm...', '...mwwwwm...', '...mwyywm...', '...mwwwwm...', '...mmmmmm...', '...mmmmmm...', '...mmmmmm...', '....mmmm....'],
+  aguardiente: ['.....rr.....', '.....rr.....', '.....ww.....', '....wggw....', '...wggggw...', '...wbbbbw...', '...wbrrbw...', '...wbbbbw...', '...wggggw...', '...wggggw...', '...wggggw...', '....wwww....'],
+  whisky: ['....kkkk....', '.....oo.....', '.....oo.....', '...oooooo...', '..oooooooo..', '..okkkkkko..', '..okyyyyko..', '..okkkkkko..', '..oooooooo..', '..oooooooo..', '..oooooooo..', '..mmmmmmmm..'],
+  cigarrillos: ['...w.w.w....', '...o.o.o....', '..wwwwwwww..', '..wwwwwwww..', '..rrrrrrrr..', '..rwwwwwwr..', '..rwrrrrwr..', '..rwwwwwwr..', '..rrrrrrrr..', '..rrrrrrrr..', '..rrrrrrrr..', '............'],
+  vape: ['.......ww...', '......w..w..', '.....w......', '.....kk.....', '....kddk....', '....kvvk....', '....kvvk....', '....kvpk....', '....kvvk....', '....kvvk....', '....kddk....', '.....kk.....'],
+  chicle: ['............', '............', '.wwwwwwwwww.', '.wllllllllw.', '.wlwwwwwwlw.', '.wlwllllwlw.', '.wlwwwwwwlw.', '.wllllllllw.', '.wwwwwwwwww.', '............', '............', '............'],
+  pouch: ['............', '............', '..gggggggg..', '.gbbbbbbbbg.', '.gbwwwwwwbg.', '.gbbbbbbbbg.', '.gggggggggg.', '.gddddddddg.', '.gddddddddg.', '..gggggggg..', '............', '............'],
+  stiwai: ['...kkkkkk...', '..kkkkkkkk..', '.oooooooooo.', '.onnnnnnnno.', '.oonnnnnnoo.', '.kkddddddkk.', '.kddkddkddk.', 'kkkddddddkkk', 'kkkkkkkkkkkk', 'kkkkkkkkkkkk', '.kkkk..kkkk.', '.dddd..dddd.'],
+});
+
 function fxState(s = G.s) {
   const L = s.life;
   if (!L.fx) L.fx = [];
@@ -30,34 +46,37 @@ const FX_INFO = {
 
 /* ---------- Tienda 24/7 ---------- */
 const STORE247 = [
-  { id: 'cafe', name: 'Café doble', price: 6, icon: 'coin',
+  { id: 'cafe', name: 'Café doble', price: 6, icon: 'cafe',
     desc: '+20 energía.', side: 'Sin efectos secundarios.',
     use(s, n) { addNeeds({ energia: 20 }); } },
-  { id: 'iso', name: 'Bebida hidratante', price: 9, icon: 'coin',
+  { id: 'iso', name: 'Bebida hidratante', price: 9, icon: 'iso',
     desc: '+12 energía, +4 salud.', side: 'Sin efectos secundarios.',
     use() { addNeeds({ energia: 12, salud: 4 }); } },
-  { id: 'energy', name: 'Energizante', price: 14, icon: 'star',
+  { id: 'energy', name: 'Energizante', price: 14, icon: 'energy',
     desc: 'Energía ilimitada por 1 semana (+15% productividad).', side: 'Después, 2 semanas de bajón: te cansas mucho más rápido y rindes menos. Tomar más alarga el bajón y baja tu salud.',
     use(s) { const again = hasFx('wired') || hasFx('crash'); addFx('wired', 7); addFx('crash', again ? 7 : 21); if (again) addNeeds({ salud: -6 }); s.needs.energia = 100; } },
-  { id: 'vitaminas', name: 'Vitaminas', price: 35, icon: 'plant',
+  { id: 'vitaminas', name: 'Vitaminas', price: 35, icon: 'vitaminas',
     desc: '+15 salud y recuperas salud más rápido por 2 semanas.', side: 'Sin efectos secundarios.',
     use() { addNeeds({ salud: 15 }); addFx('vit', 14); } },
-  { id: 'cerveza', name: 'Six-pack de cerveza', price: 20, icon: 'coin',
+  { id: 'cerveza', name: 'Six-pack de cerveza', price: 20, icon: 'cerveza',
     desc: '+18 ánimo.', side: '−8 energía. Si tomas 2 veces el mismo día, mañana amaneces con resaca.',
     use(s) { addNeeds({ animo: 18, energia: -8 }); drink(s, 1); } },
-  { id: 'aguardiente', name: 'Botella de aguardiente', price: 40, icon: 'vinyl',
+  { id: 'aguardiente', name: 'Botella de aguardiente', price: 40, icon: 'aguardiente',
     desc: '+35 ánimo y un rato de inspiración.', side: 'Resaca de 2 días: −15 energía y rindes 40% menos.',
     use(s) { addNeeds({ animo: 35 }); s.life.inspired = Math.max(s.life.inspired, 6); drink(s, 2); addFx('resaca', 2); } },
-  { id: 'whisky', name: 'Whisky premium', price: 260, icon: 'gold',
+  { id: 'whisky', name: 'Whisky premium', price: 260, icon: 'whisky',
     desc: '+40 ánimo. Lo compartes con tus artistas: +2 prestigio.', side: 'Resaca de 1 día.',
     use(s) { addNeeds({ animo: 40 }); s.prestige += 2; drink(s, 2); addFx('resaca', 1); } },
-  { id: 'cigarrillos', name: 'Cajetilla de cigarrillos', price: 14, icon: 'gear',
+  { id: 'cigarrillos', name: 'Cajetilla de cigarrillos', price: 14, icon: 'cigarrillos',
     desc: '+12 ánimo al momento.', side: '−3 salud y crea dependencia: si fumas seguido y paras, te da ansiedad (−ánimo cada día).',
-    use(s) { addNeeds({ animo: 12, salud: -3 }); smoke(s, 1); } },
-  { id: 'vape', name: 'Vape', price: 70, icon: 'pc',
+    use(s) { addNeeds({ animo: 12, salud: -3 }); useNicotine(s, 1); } },
+  { id: 'vape', name: 'Vape', price: 70, icon: 'vape',
     desc: '+10 ánimo y +ánimo cada día por 2 semanas.', side: 'Pierdes salud cada día que vapeas y crea más dependencia que el cigarrillo.',
-    use(s) { addNeeds({ animo: 10 }); addFx('vape', 14); smoke(s, 2); } },
-  { id: 'chicle', name: 'Chicles de nicotina', price: 25, icon: 'plant',
+    use(s) { addNeeds({ animo: 10 }); addFx('vape', 14); useNicotine(s, 2); } },
+  { id: 'velos', name: 'Velos (bolsitas de nicotina)', price: 22, icon: 'pouch',
+    desc: '+8 ánimo y +5 energía, sin humo.', side: 'Menos daño que fumar (−1 salud), pero igual crean dependencia y ansiedad si paras.',
+    use(s) { addNeeds({ animo: 8, energia: 5, salud: -1 }); useNicotine(s, 1); } },
+  { id: 'chicle', name: 'Chicles de nicotina', price: 25, icon: 'chicle',
     desc: 'Bajan tu dependencia a la nicotina y calman la ansiedad.', side: 'Sin efectos secundarios.',
     use(s) { s.life.nic = Math.max(0, s.life.nic - 3); s.life.lastSmoke = s.day; } },
 ];
@@ -67,7 +86,7 @@ function drink(s, n) {
   L.drinksDay.n += n;
   if (L.drinksDay.n >= 2 && !hasFx('resaca')) addFx('resaca', 1);
 }
-function smoke(s, n) { const L = s.life; fxState(s); L.nic = Math.min(20, L.nic + n); L.lastSmoke = s.day; }
+function useNicotine(s, n) { const L = s.life; fxState(s); L.nic = Math.min(20, L.nic + n); L.lastSmoke = s.day; }
 
 /* ---------- Seguridad del estudio ---------- */
 const SECURITY = [
@@ -259,6 +278,7 @@ function festivalEvent() {
     if (s.day - L.lastSmoke >= 1) L.nic = Math.max(0, L.nic - 0.1);
     L.fx = L.fx.filter(f => f.until > s.day);
     if (s.items.includes('dec_chocheiner')) addNeeds({ animo: 0.35 });
+    if (s.items.includes('dec_stiwai')) addNeeds({ animo: 0.15 });
   };
 
   // Semana: robos, hackeos, estafas, bolsa, negocios y festivales
@@ -294,12 +314,22 @@ function festivalEvent() {
   const baseCtl = drawControl;
   drawControl = function (ctx, s, t, opts) {
     baseCtl(ctx, s, t, opts);
-    if (!s.items.includes('dec_chocheiner')) return;
-    const L = layout(s), map = ICONS.chocheiner, x0 = L.cx + 18, y0 = 128 + (((t / 900) | 0) % 2);
+    const L = layout(s);
     X = ctx;
-    R(x0 + 2, y0 + 23, 22, 2, 'rgba(0,0,0,.3)');
-    map.forEach((row, y) => { for (let x = 0; x < 12; x++) { const c = row[x]; if (c !== '.' && ICON_PAL[c]) R(x0 + x * 2, y0 + y * 2, 2, 2, ICON_PAL[c]); } });
-    if (((t / 400) | 0) % 5 === 0) P(x0 + 11, y0 + 19, '#ffffff');
+    const plush = (map, x0, y0) => {
+      R(x0 + 2, y0 + 23, 22, 2, 'rgba(0,0,0,.3)');
+      map.forEach((row, y) => { for (let x = 0; x < 12; x++) { const c = row[x]; if (c !== '.' && ICON_PAL[c]) R(x0 + x * 2, y0 + y * 2, 2, 2, ICON_PAL[c]); } });
+    };
+    if (s.items.includes('dec_chocheiner')) {
+      const x0 = L.cx + 18, y0 = 128 + (((t / 900) | 0) % 2);
+      plush(ICONS.chocheiner, x0, y0);
+      if (((t / 400) | 0) % 5 === 0) P(x0 + 11, y0 + 19, '#ffffff');
+    }
+    if (s.items.includes('dec_stiwai')) {
+      const x0 = L.cx + 44, y0 = 127;
+      plush(ICONS.stiwai, x0, y0);
+      if (((t / 700) | 0) % 6 === 0) R(x0 + 4, y0 + 6, 3, 1, '#fff1e8'); // brillo en las gafas
+    }
   };
 
   // Celular: apps de inversiones y agenda de festivales

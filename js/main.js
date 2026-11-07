@@ -49,7 +49,8 @@ function frame(now) {
     while (G.acc >= DAY_MS && G.running && G.modals === 0) { G.acc -= DAY_MS; advanceDay(); }
   }
   if (live && s.loc === 'city' && G.modals === 0) updateCity(dt);
-  drawScene(ctx, s, now, { frozen: live && !flowing });
+  try { drawScene(ctx, s, now, { frozen: live && !flowing }); }
+  catch (err) { if (!frame.warned) { frame.warned = true; console.error(err); } }
   if (live) {
     UI.runQueue();
     const pr = $('#prompt');

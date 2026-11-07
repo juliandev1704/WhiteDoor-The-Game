@@ -33,10 +33,11 @@ Desarrollado por **Julian Camilo Forero Daza**.
 - **Rutina automática** (panel Vida): comes, duermes y descansas solo cuando una barra está muy baja.
 
 ### Dinero y estilo
-- **Tienda 24/7:** café, bebidas hidratantes, energizantes, vitaminas, cerveza, aguardiente, whisky, cigarrillos, vape y chicles de nicotina. Cada uno te ayuda ya, pero casi todos tienen un costo después: el energizante da energía ilimitada una semana y luego 2 semanas de bajón; el alcohol deja resaca; la nicotina crea dependencia y ansiedad. También vende seguridad para el estudio: alarma, firewall y caja fuerte.
+- **Tienda 24/7:** café, bebidas hidratantes, energizantes, vitaminas, cerveza, aguardiente, whisky, cigarrillos, vape, Velos (bolsitas de nicotina) y chicles de nicotina. Cada uno te ayuda ya, pero casi todos tienen un costo después: el energizante da energía ilimitada una semana y luego 2 semanas de bajón; el alcohol deja resaca; la nicotina crea dependencia y ansiedad. También vende seguridad para el estudio: alarma, firewall y caja fuerte.
 - **Amenazas:** te pueden robar el estudio (efectivo y equipo), hackear tu computador y filtrar la canción que estás haciendo, o intentar estafarte con mensajes y negocios "garantizados".
 - **Bolsa Pixel:** acciones de 4 empresas cuyo precio sube y baja cada semana, y negocios (food truck, tienda de discos, bar karaoke, escuela de música, sala de conciertos) que dejan ingresos semanales.
 - **Festivales:** desde 40 de prestigio, los festivales te contratan para tocar en vivo. Puedes aceptar, negociar o rechazar.
+- **Stiwai:** gorila de peluche raro con gafas de esquí ($35.000, desde el Garaje estudio). Sube un poco la velocidad, las fases, el ambiente y el ánimo.
 - **Chocheiner:** peluche legendario único ($120.000, desde el Estudio en local). Sube velocidad, fases, ambiente y ánimo.
 - **Merch:** se vende según tu éxito actual (canciones sonando, nota y listas), el precio sube con tu prestigio y el mercado se satura si lo inundas. Lotes de 50 a 5.000 unidades, más baratos por volumen.
 - **Celular** (botón sobre la escena o tecla `T`): guarda o saca plata del banco en un toque, pide comida a domicilio (PixelEats), toma un taxi a cualquier lugar y compra en línea (Do Re Mi con 20% de envío, Pixel Mall, Casas y Talentos). También abre mensajes, séquito, estilo, objetivos y trabajos.
