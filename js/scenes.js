@@ -583,3 +583,6 @@ UI.security = function () {
     return msg;
   };
 })();
+
+// La Tienda 24/7 también en el celular (a domicilio)
+PHONE_APPS.splice(2, 0, { id: 'tienda247', name: 'Tienda 24/7', icon: 'energy', color: '#00a83a', open: () => UI.shop247() });
