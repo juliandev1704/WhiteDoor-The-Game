@@ -467,11 +467,11 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
   .logo { font-size: 0; gap: 0; }
   .logo .pxicon { width: 22px; height: 22px; }
   .tb-left { min-width: 0; }
-  .tb-date { font-size: 16px; line-height: 1.05; min-width: 0; overflow: hidden; }
+  .tb-date { font-size: 16px; line-height: 1.3; min-width: 0; overflow: hidden; }
   .tb-date span { overflow: hidden; text-overflow: ellipsis; }
   .tb-date .muted { font-size: 14px; }
   .speed { gap: 3px; grid-row: 1; grid-column: 2; }
-  .speed button { padding: 8px 7px; font-size: 10px; min-width: 34px; }
+  .speed button { padding: 8px 6px; font-size: 11px; min-width: 34px; }
   .tb-stats {
     grid-column: 1 / -1; width: auto; margin: 0;
     display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.2fr; gap: 4px;
@@ -486,7 +486,7 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
   #screen { width: 100% !important; }
   #devpanel, #needs { padding: 6px 8px; }
   #devpanel { font-size: 16px; }
-  .dp-title { font-size: 10px; }
+  .dp-title { font-size: 11px; }
   #needs { font-size: 15px; gap: 3px 12px; }
   #needs-actions { gap: 6px; }
   #needs-actions button { font-size: 19px; padding: 9px 2px; }
@@ -511,7 +511,7 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
   #actions .act .pxicon { width: 22px; height: 22px; }
   #actions .act.primary { grid-column: span 2; flex-direction: row; gap: 8px; }
   #actions .act.primary::after { font-size: 18px; }
-  .badge { top: -6px; right: -4px; font-size: 9px; padding: 2px 4px; }
+  .badge { top: -6px; right: -4px; font-size: 11px; padding: 2px 4px; }
 
   /* Ventanas a pantalla completa, con la X siempre a mano */
   .modal-wrap { padding: 0; align-items: stretch; }
@@ -527,7 +527,7 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
   .modal-body { padding: 10px 10px calc(24px + env(safe-area-inset-bottom)); -webkit-overflow-scrolling: touch; }
   .tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
-  .tab { flex: none; font-size: 10px; padding: 9px 10px; }
+  .tab { flex: none; font-size: 11px; padding: 9px 10px; }
   .card { flex-wrap: wrap; padding: 8px; }
   .cbuy { margin-left: auto; }
   .cinfo b { font-size: 20px; }
