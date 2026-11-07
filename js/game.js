@@ -33,7 +33,9 @@ function fmtNum(n) {
 }
 function dateLabel(s) {
   const w = s.week;
-  return `Año ${Math.floor(w / 48) + 1} · Mes ${Math.floor((w % 48) / 4) + 1} · Sem ${(w % 4) + 1} · ${DAY_NAMES[s.day % 7]}`;
+  const y = Math.floor(w / 48) + 1, m = Math.floor((w % 48) / 4) + 1, wk = (w % 4) + 1, d = DAY_NAMES[s.day % 7];
+  if (typeof window !== 'undefined' && window.innerWidth <= 420) return `A${y} · M${m} · S${wk} · ${d}`;
+  return `Año ${y} · Mes ${m} · Sem ${wk} · ${d}`;
 }
 
 /* ---------- estado inicial ---------- */

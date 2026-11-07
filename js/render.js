@@ -547,6 +547,8 @@ const ICON_PAL = {
   b: '#29adff', n: '#1d2b53', p: '#ff77a8', l: '#00e436', e: '#008751', m: '#ab5236', v: '#83769c', u: '#7e2553',
 };
 const ICONS = {
+  trophy: ['..kkkkkkkk..', 'kkyyyyyyyykk', 'kykyyyyyoyky', 'kykyyyyyokyk', '.kkyyyyyokk.', '...kyyyyk...',
+    '....kyyk....', '.....kk.....', '....kyyk....', '...kooook...', '...kkkkkk...', '............'],
   note: ['....kkkkkk..', '....kpppppk.', '....kpkkkpk.', '....kpk..kpk', '....kpk..kpk', '....kpk..kpk',
          '..kkkpk.kkpk', '.kppppkkpppk', '.kppppkkpppk', '..kkkk..kkk.', '............', '............'],
   mail: ['............', 'kkkkkkkkkkkk', 'kwkwwwwwwkwk', 'kwwkwwwwkwwk', 'kwwwkwwkwwwk', 'kwwwwkkwwwwk',

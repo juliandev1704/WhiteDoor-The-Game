@@ -77,6 +77,8 @@ const UI = {
     const unhappy = s.roster.filter(a => a.mood < 25 || a.energy < 15).length;
     lb.textContent = unhappy; lb.hidden = !unhappy;
     $('#b-city span').textContent = s.loc === 'city' ? 'Ir al estudio' : 'Ciudad';
+    $('#b-city').dataset.short = s.loc === 'city' ? 'Estudio' : 'Ciudad';
+    $('#dpad').hidden = !(TOUCH && s.loc === 'city');
     this.updateNeeds(); this.updateNav();
     const pb = $('#b-producer .badge');
     pb.textContent = s.skillPts; pb.hidden = !s.skillPts;

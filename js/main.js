@@ -4,6 +4,7 @@
    ========================================================= */
 const canvas = $('#scene');
 const ctx = canvas.getContext('2d');
+const TOUCH = window.matchMedia && matchMedia('(pointer: coarse)').matches;
 ctx.imageSmoothingEnabled = false;
 
 // Estado de demostración para la pantalla de título
@@ -54,7 +55,7 @@ function frame(now) {
     const pr = $('#prompt');
     if (s.loc === 'city' && CITY.near && G.modals === 0) {
       pr.hidden = false;
-      pr.textContent = `E · Entrar: ${CITY.near.name}`;
+      pr.textContent = (TOUCH ? 'Tocar · Entrar: ' : 'E · Entrar: ') + CITY.near.name;
     } else pr.hidden = true;
   }
   bubT += dt;
@@ -130,7 +131,7 @@ const ACTIONS = {
   'b-disco': () => UI.discography(),
   'b-menu': () => UI.menu(),
 };
-const ICON_FOR = { 'b-song': 'note', 'b-inbox': 'mail', 'b-city': 'door', 'b-goals': 'gold', 'b-jobs': 'coin', 'b-label': 'gold', 'b-staff': 'pc', 'b-life': 'fans', 'b-producer': 'star', 'b-disco': 'vinyl', 'b-menu': 'gear' };
+const ICON_FOR = { 'b-song': 'note', 'b-inbox': 'mail', 'b-city': 'door', 'b-goals': 'trophy', 'b-jobs': 'coin', 'b-label': 'gold', 'b-staff': 'pc', 'b-life': 'fans', 'b-producer': 'star', 'b-disco': 'vinyl', 'b-menu': 'gear' };
 for (const [id, fn] of Object.entries(ACTIONS)) {
   const b = document.getElementById(id);
   b.insertAdjacentHTML('afterbegin', iconImg(ICON_FOR[id]));
@@ -169,6 +170,14 @@ window.addEventListener('keydown', e => {
   if (e.key === ' ') { e.preventDefault(); G.paused = !G.paused; UI.refresh(); }
   if (e.key === '1' || e.key === '2' || e.key === '3') { G.paused = false; G.speed = [1, 2, 4][+e.key - 1]; UI.refresh(); }
   if (e.key === 'Escape') { const x = document.querySelector('.modal-wrap:last-child [data-x]'); if (x) x.click(); }
+});
+// Cruceta táctil para caminar en la ciudad
+document.querySelectorAll('#dpad [data-dir]').forEach(b => {
+  const on = e => { e.preventDefault(); CITY.keys[b.dataset.dir] = true; b.classList.add('on'); };
+  const off = () => { CITY.keys[b.dataset.dir] = false; b.classList.remove('on'); };
+  b.addEventListener('pointerdown', on);
+  for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) b.addEventListener(ev, off);
+  b.addEventListener('contextmenu', e => e.preventDefault());
 });
 window.addEventListener('keyup', e => { if (KEYMAP[e.code]) CITY.keys[KEYMAP[e.code]] = false; });
 window.addEventListener('blur', () => { CITY.keys = {}; });

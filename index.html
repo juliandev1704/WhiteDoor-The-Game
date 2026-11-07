@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1b1730">
   <title>White Door — Music Studio Tycoon</title>
   <meta name="description" content="White Door: un juego tycoon 8-bit de estudio musical. Desarrollado por Julian Camilo Forero Daza.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,22 +55,29 @@
           <button id="nav-next" aria-label="Cuarto siguiente">▶</button>
         </div>
         <button id="prompt" hidden></button>
+        <div id="dpad" hidden>
+          <button data-dir="up" aria-label="Arriba">▲</button>
+          <button data-dir="left" aria-label="Izquierda">◀</button>
+          <button data-dir="down" aria-label="Abajo">▼</button>
+          <button data-dir="right" aria-label="Derecha">▶</button>
+          <p class="dpad-hint">Toca el mapa para caminar hasta allá, o usa las flechas.</p>
+        </div>
         <div id="fade"></div>
       </div>
     </main>
 
     <nav id="actions">
-      <button id="b-song" class="act primary"><span>Nueva canción</span></button>
-      <button id="b-inbox" class="act"><span>Bandeja</span><em class="badge" hidden></em></button>
-      <button id="b-city" class="act"><span>Ciudad</span></button>
-      <button id="b-goals" class="act"><span>Objetivos</span><em class="badge" hidden></em></button>
-      <button id="b-jobs" class="act"><span>Trabajos</span></button>
-      <button id="b-label" class="act"><span>Sello</span><em class="badge" hidden></em></button>
-      <button id="b-staff" class="act"><span>Personal</span></button>
-      <button id="b-life" class="act"><span>Vida</span></button>
-      <button id="b-producer" class="act"><span>Productor</span><em class="badge" hidden></em></button>
-      <button id="b-disco" class="act"><span>Discografía</span></button>
-      <button id="b-menu" class="act"><span>Menú</span></button>
+      <button id="b-song" data-short="Canción" class="act primary"><span>Nueva canción</span></button>
+      <button id="b-inbox" data-short="Bandeja" class="act"><span>Bandeja</span><em class="badge" hidden></em></button>
+      <button id="b-city" data-short="Ciudad" class="act"><span>Ciudad</span></button>
+      <button id="b-goals" data-short="Objetivos" class="act"><span>Objetivos</span><em class="badge" hidden></em></button>
+      <button id="b-jobs" data-short="Trabajos" class="act"><span>Trabajos</span></button>
+      <button id="b-label" data-short="Sello" class="act"><span>Sello</span><em class="badge" hidden></em></button>
+      <button id="b-staff" data-short="Personal" class="act"><span>Personal</span></button>
+      <button id="b-life" data-short="Vida" class="act"><span>Vida</span></button>
+      <button id="b-producer" data-short="Productor" class="act"><span>Productor</span><em class="badge" hidden></em></button>
+      <button id="b-disco" data-short="Discos" class="act"><span>Discografía</span></button>
+      <button id="b-menu" data-short="Menú" class="act"><span>Menú</span></button>
     </nav>
   </div>
 

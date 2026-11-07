@@ -392,7 +392,7 @@ Object.assign(UI, {
             ${a.task === 'grabar' ? `<div class="bonus">Grabando con ${prod ? esc(prod.name) : '—'}: ${Math.round(a.prog * 100)}%</div>` : ''}
             <div class="chips tasks">${Object.entries(ROSTER_TASKS).map(([k, t]) => {
               const err = taskError(a, k);
-              return `<button class="chip ${a.task === k ? 'on' : ''}" data-task="${k}" data-id="${a.id}" ${err ? `disabled title="${esc(err)}"` : `title="${t.desc}"`}>${t.name}</button>`;
+              return `<button class="chip ${a.task === k ? 'on' : ''} ${err ? 'off' : ''}" data-task="${k}" data-id="${a.id}" title="${esc(err || t.desc)}">${t.name}</button>`;
             }).join('')}</div>
           </div>
           <div class="offer-actions"><button class="btn small" data-free="${a.id}">Liberar</button></div></div>`;
