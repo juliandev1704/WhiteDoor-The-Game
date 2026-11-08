@@ -579,7 +579,8 @@ const UI = {
       if (a === 'help') { m.close(); this.help(); }
       if (a === 'title') { saveGame(); m.close(); showTitle(); }
       if (a === 'wipe') {
-        if (confirm('¿Seguro que quieres borrar tu partida? No se puede deshacer.')) { deleteSave(); m.close(); showTitle(); }
+        askConfirm('Se pierde todo tu progreso y no se puede deshacer.', { title: '¿Borrar tu partida?', ok: 'Borrar', danger: true, icon: 'disk' })
+          .then(yes => { if (yes) { deleteSave(); m.close(); showTitle(); } });
       }
     });
   },
@@ -625,3 +626,33 @@ const UI = {
     m.body.addEventListener('click', e => { if (e.target.closest('button')) { m.close(); showTitle(); } });
   },
 };
+
+/* ---------- Confirmación con el estilo del juego (reemplaza confirm() del navegador) ---------- */
+function askConfirm(text, { title = '¿Seguro?', ok = 'Sí', cancel = 'Cancelar', danger = false, icon = 'door' } = {}) {
+  return new Promise(resolve => {
+    const wrap = document.createElement('div');
+    wrap.className = 'ask-wrap';
+    wrap.innerHTML = `<div class="ask" role="alertdialog" aria-modal="true" aria-labelledby="ask-t">
+      <div class="ask-ico">${iconImg(icon, 'lg')}</div>
+      <h2 id="ask-t">${title}</h2><p>${text}</p>
+      <div class="ask-btns"><button class="btn" data-v="0">${cancel}</button><button class="btn ${danger ? 'danger' : 'primary'}" data-v="1">${ok}</button></div></div>`;
+    document.body.appendChild(wrap);
+    G.modals++;
+    const done = v => {
+      G.modals = Math.max(0, G.modals - 1);
+      document.removeEventListener('keydown', key, true);
+      wrap.remove(); resolve(v);
+    };
+    const key = e => {
+      if (e.key === 'Escape') { e.stopPropagation(); done(false); }
+      if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); done(true); }
+    };
+    document.addEventListener('keydown', key, true);
+    wrap.addEventListener('click', e => {
+      const b = e.target.closest('[data-v]');
+      if (b) { SFX.click(); done(b.dataset.v === '1'); }
+      else if (e.target === wrap) done(false);
+    });
+    setTimeout(() => wrap.querySelector('[data-v="1"]').focus(), 30);
+  });
+}

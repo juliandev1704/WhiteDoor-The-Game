@@ -226,7 +226,15 @@ Object.assign(UI, {
       let err, ok;
       if (b.dataset.room) { err = buyRoom(+b.dataset.room); ok = `¡Te mudaste a: ${ROOMS[+b.dataset.room].name}!`; }
       if (b.dataset.mod) { err = buyModule(b.dataset.mod); ok = `Construiste: ${MODULES[b.dataset.mod].name}. Míralo con ◀ ▶ en tu estudio.`; }
-      if (b.dataset.sell) { if (!confirm('¿Vender este módulo por la mitad de su precio?')) return; err = sellModule(+b.dataset.sell); ok = 'Módulo vendido.'; }
+      if (b.dataset.sell) {
+        askConfirm('Te devuelven la mitad de lo que pagaste y el espacio queda libre.', { title: '¿Vender este módulo?', ok: 'Vender', icon: 'house' }).then(yes => {
+          if (!yes) return;
+          const e2 = sellModule(+b.dataset.sell);
+          if (e2) { this.toast(e2, 'bad'); SFX.bad(); } else { this.toast('Módulo vendido.', 'good'); SFX.coin(); }
+          render(); this.refresh();
+        });
+        return;
+      }
       if (err) { this.toast(err, 'bad'); SFX.bad(); } else { this.toast(ok, 'good'); SFX.coin(); }
       render(); this.refresh();
     });
@@ -412,7 +420,12 @@ Object.assign(UI, {
       }
       if (b.dataset.free) {
         const a = s.roster.find(x => x.id === +b.dataset.free);
-        if (confirm(`¿Liberar a ${a.name} de su contrato?`)) { releaseArtist(a.id); this.toast(`${a.name} dejó el sello.`, 'muted'); }
+        askConfirm(`${esc(a.name)} dejará White Door Records y ya no grabará contigo.`, { title: '¿Liberar del contrato?', ok: 'Liberar', danger: true, icon: 'fans' }).then(yes => {
+          if (!yes) return;
+          releaseArtist(a.id); this.toast(`${a.name} dejó el sello.`, 'muted');
+          saveGame(); render(); this.refresh();
+        });
+        return;
       }
       saveGame(); render(); this.refresh();
     });
@@ -442,8 +455,10 @@ Object.assign(UI, {
     m.body.addEventListener('click', e => {
       const b = e.target.closest('[data-fire]'); if (!b) return;
       const st = s.staff.find(x => x.id === +b.dataset.fire);
-      if (!confirm(`¿Despedir a ${st.name}? Le pagas ${fmtMoney(st.salary * 2)} de liquidación.`)) return;
-      fireStaff(st.id); SFX.click(); render(); this.refresh();
+      askConfirm(`Le pagas ${fmtMoney(st.salary * 2)} de liquidación.`, { title: `¿Despedir a ${esc(st.name)}?`, ok: 'Despedir', danger: true, icon: 'fans' }).then(yes => {
+        if (!yes) return;
+        fireStaff(st.id); SFX.click(); render(); this.refresh();
+      });
     });
     render();
   },

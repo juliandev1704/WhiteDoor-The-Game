@@ -84,13 +84,17 @@ function helpFor(title) { const h = MENU_HELP.find(([re]) => re.test(title)); re
   $('#btn-start').addEventListener('click', () => {
     const name = nameIn.value.trim();
     if (!name) { nameIn.focus(); nameIn.classList.add('need'); $('#title-err').hidden = false; return; }
-    if (hasSave() && !confirm('Ya tienes una partida guardada. ¿Empezar una nueva? (Se perderá la anterior)')) return;
+    const go = () => {
     const st = newState(name);
     st.gender = gender;
     lookState(st);
     if (gender === 'm') st.life.look.style = 1;
     st.life.pref = titlePrefs();
     startGame(st, true);
+    };
+    if (!hasSave()) return go();
+    askConfirm('Si empiezas una nueva, tu partida guardada se borra para siempre.', { title: 'Ya tienes una partida', ok: 'Sí, empezar', cancel: 'Volver', danger: true, icon: 'disk' })
+      .then(yes => { if (yes) go(); });
   });
   nameIn.addEventListener('input', () => { nameIn.classList.remove('need'); $('#title-err').hidden = true; });
 

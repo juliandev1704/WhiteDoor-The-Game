@@ -464,8 +464,12 @@ Object.assign(UI, {
       }
       if (d.sellbiz) {
         const bz = BUSINESSES.find(x => x.id === d.sellbiz);
-        if (!confirm(`¿Vender ${bz.name} por ${fmtMoney(bz.price * 0.7)}?`)) return;
-        I.biz = I.biz.filter(x => x !== bz.id); s.money += Math.round(bz.price * 0.7);
+        askConfirm(`Te pagan ${fmtMoney(bz.price * 0.7)} (el 70% de lo que costó) y dejas de recibir sus ingresos semanales.`, { title: `¿Vender ${bz.name}?`, ok: 'Vender', icon: 'coin' }).then(yes => {
+          if (!yes || !I.biz.includes(bz.id)) return;
+          I.biz = I.biz.filter(x => x !== bz.id); s.money += Math.round(bz.price * 0.7);
+          SFX.coin(); saveGame(); render(); this.refresh();
+        });
+        return;
       }
       saveGame(); render(); this.refresh();
     });
