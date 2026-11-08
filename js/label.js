@@ -4,7 +4,7 @@
    ========================================================= */
 
 /* ---------- Personal ---------- */
-function staffCapacity(s = G.s) { return 4 * moduleCount('oficina', s); }
+function staffCapacity(s = G.s) { return OFFICE_DESKS * moduleCount('oficina', s); }
 function staffName() { return pick(STAFF_NAMES.first) + ' ' + pick(STAFF_NAMES.last); }
 
 function genStaffCandidate() {

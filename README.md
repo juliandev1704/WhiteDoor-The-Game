@@ -56,7 +56,7 @@ Desarrollado por **Julian Camilo Forero Daza**.
 
 ### Empresa
 - **Módulos:** cada propiedad tiene espacio para cuartos extra: Oficina, Cabina de grabación, Sala de ensayo, Lounge y Dormitorio. Recórrelos con ◀ ▶.
-- **Personal:** asistentes, ingenieros de sonido, productores, mánagers y community managers. Trabajan en segundo plano y los ves en sus escritorios.
+- **Personal:** asistentes, ingenieros de sonido, productores, mánagers y community managers. Trabajan en segundo plano y los ves en sus escritorios (6 por oficina). La sede final (White Door Records HQ) tiene espacio para 8 módulos.
 - **White Door Records:** funda tu sello, firma artistas y ponlos a entrenar, grabar con tus productores, salir de gira o co-producir contigo (más puntos y menos ruido; el artista de la canción siempre ayuda).
 
 Atajos de teclado: `Espacio` pausa · `1` `2` `3` cambian la velocidad · `Esc` cierra ventanas · `◀ ▶` cambian de cuarto · `E` entra a un edificio · `T` saca el celular.

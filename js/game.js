@@ -577,7 +577,7 @@ function buyModule(id) {
 function sellModule(idx) {
   const s = G.s, id = s.modules[idx];
   if (!id) return 'No existe.';
-  if (id === 'oficina' && s.staff.length > 4 * (moduleCount('oficina') - 1)) return 'Primero despide personal: no cabrían en la oficina.';
+  if (id === 'oficina' && s.staff.length > OFFICE_DESKS * (moduleCount('oficina') - 1)) return 'Primero despide personal: no cabrían en la oficina.';
   s.modules.splice(idx, 1);
   s.money += Math.round(MODULES[id].price * 0.5);
   s.view = 0;

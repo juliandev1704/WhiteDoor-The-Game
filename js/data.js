@@ -157,8 +157,8 @@ const ROOMS = [
   { name: 'Habitación amplia',    price: 15000,    rent: 150,   w: 256, amb: 2,  slots: 1, desc: 'Más espacio y un cuarto extra para un módulo.' },
   { name: 'Garaje estudio',       price: 45000,    rent: 400,   w: 288, amb: 3,  slots: 2, desc: 'Aislado, amplio y con espacio para una batería.' },
   { name: 'Estudio en local',     price: 300000,   rent: 1200,  w: 320, amb: 5,  slots: 3, desc: 'Un estudio de verdad, con paredes tratadas.' },
-  { name: 'White Door Studios',   price: 2500000,  rent: 4000,  w: 320, amb: 8,  slots: 4, desc: 'Estudio profesional. Las estrellas hacen fila.' },
-  { name: 'White Door Records HQ',price: 15000000, rent: 10000, w: 320, amb: 12, slots: 5, desc: 'La sede de tu propio sello discográfico. El final del camino.' },
+  { name: 'White Door Studios',   price: 2500000,  rent: 4000,  w: 320, amb: 8,  slots: 5, desc: 'Estudio profesional. Las estrellas hacen fila.' },
+  { name: 'White Door Records HQ',price: 15000000, rent: 10000, w: 320, amb: 12, slots: 8, desc: 'La sede de tu propio sello discográfico, con espacio para 8 módulos. El final del camino.' },
 ];
 
 const COURSES = [

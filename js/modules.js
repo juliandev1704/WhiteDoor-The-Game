@@ -123,8 +123,8 @@ function drawOffice(s, t, nth) {
   drawPlant(6, t);
   // Escritorios
   const booth = hasModule('cabina', s) ? producersInBooth(s) : [];
-  const team = s.staff.filter(x => !booth.includes(x.id)).slice(nth * 4, nth * 4 + 4);
-  const desks = [[96, 116], [220, 116], [136, 150], [262, 150]];
+  const team = s.staff.filter(x => !booth.includes(x.id)).slice(nth * OFFICE_DESKS, (nth + 1) * OFFICE_DESKS);
+  const desks = [[62, 116], [160, 116], [258, 116], [100, 150], [198, 150], [282, 150]];
   desks.forEach(([cx, dy], i) => drawStation(cx, dy, team[i], t));
 }
 

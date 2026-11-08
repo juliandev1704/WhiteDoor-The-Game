@@ -12,8 +12,9 @@ COURSES.push(
 );
 
 // Módulos: cuartos extra del estudio (cada propiedad tiene espacios limitados)
+const OFFICE_DESKS = 6; // escritorios por oficina
 const MODULES = {
-  oficina:    { name: 'Oficina',             price: 20000, icon: 'pc',    desc: '4 escritorios para tu personal. Sin oficina no puedes contratar.' },
+  oficina:    { name: 'Oficina',             price: 20000, icon: 'pc',    desc: '6 escritorios para tu personal. Sin oficina no puedes contratar.' },
   cabina:     { name: 'Cabina de grabación', price: 35000, icon: 'mic',   p: [0, 4, 0], desc: 'Tus artistas firmados graban aquí (2 a la vez). +4 Grabación.' },
   ensayo:     { name: 'Sala de ensayo',      price: 28000, icon: 'keys',  desc: 'La academia de tus artistas: entrenan y suben su talento (3 a la vez).' },
   lounge:     { name: 'Lounge y cocina',     price: 15000, icon: 'sofa',  amb: 4, desc: 'Comes mejor, te relajas más y tus artistas descansan aquí.' },
