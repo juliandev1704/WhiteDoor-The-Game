@@ -23,7 +23,7 @@ Desarrollado por **Julian Camilo Forero Daza**.
 ### Vida (estilo Sims)
 - **Necesidades:** energía, hambre, ánimo y salud. Si las descuidas rindes menos, te desmayas o terminas en el hospital.
 - **Decisiones de vida:** fiestas, familia, pareja (salir, formalizar, vivir juntos, casarse), concursos, préstamos, impuestos, bloqueos creativos, premios anuales y más.
-- **Pareja:** escenas animadas en cada cita (cena, cine, picnic, paseo al atardecer), al mudarse juntos y en la boda. Cuando viven juntos, tu pareja anda por la casa (sala de control, cocina del lounge, dormitorio); tócale para abrazar, besar, cocinar, ver una película, bailar o pasar la noche juntos.
+- **Pareja:** escenas animadas en cada cita (cena, cine, picnic, paseo al atardecer), al mudarse juntos y en la boda. Cuando viven juntos, tu pareja anda por la casa (cocina del lounge y dormitorio; nunca en la sala de control); tócale para abrazar, besar, cocinar, ver una película, bailar o pasar la noche juntos.
 - **Chats (celular):** habla con tu pareja, con los artistas de tu sello y con los artistas con los que has trabajado. Puedes pedir colaboraciones o que te compartan en redes, y te escriben solos.
 - **Averías:** el computador, el micrófono, los monitores, la luz, el techo o el aire acondicionado se pueden dañar. Puedes repararlos tú (habilidad Manitas) o llamar a un técnico.
 - **Aspiraciones:** metas de vida y de carrera con recompensas.
@@ -37,7 +37,8 @@ Desarrollado por **Julian Camilo Forero Daza**.
 ### Dinero y estilo
 - **Tienda 24/7 · Pixel Mall:** separada por apartados (snacks, bebidas y energía, salud, licores, nicotina) y con el Pixel Mall adentro (decoración, ropa, objetos, viajes) y la seguridad. Vende café, bebidas hidratantes, energizantes, vitaminas, cerveza, aguardiente, whisky, cigarrillos, vape, Velos (bolsitas de nicotina) y chicles de nicotina. Cada uno te ayuda ya, pero casi todos tienen un costo después: el energizante da energía ilimitada una semana y luego 2 semanas de bajón; el alcohol deja resaca; la nicotina crea dependencia y ansiedad. También vende seguridad para el estudio: alarma, firewall y caja fuerte.
 - **Amenazas:** te pueden robar el estudio (efectivo y equipo), hackear tu computador y filtrar la canción que estás haciendo, o intentar estafarte con mensajes y negocios "garantizados".
-- **Bolsa Pixel:** acciones de 4 empresas cuyo precio sube y baja cada semana, y negocios (food truck, tienda de discos, bar karaoke, escuela de música, sala de conciertos) que dejan ingresos semanales.
+- **Bolsa Pixel:** acciones de 4 empresas cuyo precio sube y baja cada semana.
+- **Negocios (Trabajos > Negocios):** food truck, tienda de discos, fábrica de merch, bar karaoke, escuela de música y sala de conciertos. Dejan ingresos semanales; la fábrica de merch produce el merch sola cada semana según la demanda ($5 c/u), así ya no tienes que pedirlo a mano.
 - **Festivales:** desde 40 de prestigio, los festivales te contratan para tocar en vivo. Puedes aceptar, negociar o rechazar.
 - **Stiwai:** gorila de peluche raro con gafas de esquí ($35.000, desde el Garaje estudio). Sube un poco la velocidad, las fases, el ambiente y el ánimo.
 - **Spoony:** perrito alcancía blanco que vive sobre el escritorio ($60.000, desde el Garaje estudio). +5% en pagos de canciones y trabajos, el doble de intereses en los ahorros y monedas cada semana.

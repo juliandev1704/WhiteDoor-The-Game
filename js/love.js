@@ -418,13 +418,14 @@ UI.partnerMenu = function () {
 };
 
 /* ---------- La pareja vive en tu casa ---------- */
-const SPOT_NAME = { main: 'en la sala de control', lounge: 'en la cocina del lounge', dorm: 'en el dormitorio' };
+const SPOT_NAME = { casa: 'en casa', lounge: 'en la cocina del lounge', dorm: 'en el dormitorio' };
 const LOVE = { hit: null };
 function partnerSpot(s = G.s, t = performance.now()) {
-  const spots = ['main'];
+  // Nunca en la sala de control: ahí se trabaja con los artistas
+  const spots = [];
   if (s.modules.includes('lounge')) spots.push('lounge');
   if (s.modules.includes('dormitorio')) spots.push('dorm');
-  return spots[Math.floor(t / 24000) % spots.length];
+  return spots.length ? spots[Math.floor(t / 24000) % spots.length] : 'casa';
 }
 const partnerHome = s => { const p = s && s.life && s.life.partner; return p && p.stage >= 2 ? p : null; };
 function partnerBubble(x, y, t) { if (((t / 1000) | 0) % 6 === 0) drawHeart(x - 3, y - 4 - Math.round(Math.abs(Math.sin(t / 200)) * 2), 1); }
@@ -440,19 +441,14 @@ function weddingPhoto(x, y, s, p) {
   const baseScene = drawScene;
   drawScene = function (ctx, s, t, opts) { LOVE.hit = null; return baseScene(ctx, s, t, opts); };
 
-  // Sala de control: escucha tu música a tu lado
+  // Sala de control: tu pareja no entra (solo la foto de la boda)
   const baseCtl = drawControl;
   drawControl = function (ctx, s, t, opts) {
     baseCtl(ctx, s, t, opts);
     const p = partnerHome(s);
-    if (!p || partnerSpot(s, t) !== 'main' || !G.running) return;
+    if (!p || p.stage < 3 || !G.running) return;
     X = ctx;
-    const L = layout(s), x = L.cx - 70, fy = 158;
-    R(x - 7, fy - 1, 14, 2, 'rgba(0,0,0,.3)');
-    drawPartnerFig(x, fy, p, t, { sing: !!(s.dev && !s.dev.finished) });
-    partnerBubble(x, fy - 52, t);
-    if (p.stage >= 3) weddingPhoto(L.win + 30, 74, s, p);
-    LOVE.hit = { view: 0, x: x - 10, y: fy - 50, w: 20, h: 52 };
+    weddingPhoto(layout(s).win + 30, 74, s, p);
   };
 
   // Lounge y dormitorio

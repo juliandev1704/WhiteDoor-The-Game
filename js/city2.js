@@ -199,8 +199,44 @@ const BUSINESSES = [
   { id: 'discos',    name: 'Tienda de discos',    price: 40000,  base: 760,  icon: 'vinyl',  desc: 'Vinilos y casetes para coleccionistas.' },
   { id: 'karaoke',   name: 'Bar karaoke',         price: 90000,  base: 1600, icon: 'mic',    desc: 'Gana más mientras más fans tengas.', fans: true },
   { id: 'escuela',   name: 'Escuela de música',   price: 180000, base: 3000, icon: 'book',   desc: 'Clases para la próxima generación.' },
+  { id: 'merch',     name: 'Fábrica de merch',    price: 60000,  base: 0,    icon: 'shirt',  desc: 'Produce tu merch sola cada semana según la demanda, a $5 c/u. Ya no tienes que pedirlo a mano.', auto: true },
   { id: 'sala',      name: 'Sala de conciertos',  price: 650000, base: 9500, icon: 'speaker', desc: 'Tu propio escenario. Gana más con más fans.', fans: true },
 ];
+function hasBiz(id, s = G.s) { return invState(s).biz.includes(id); }
+
+// Pestaña Negocios (en Trabajos)
+function bizHTML(s) {
+  const I = invState(s);
+  return '<p class="muted">Los compras una vez y te dejan ingresos cada semana.</p><div class="grid">' + BUSINESSES.map(b => {
+    const own = I.biz.includes(b.id);
+    const info = b.auto ? `Fabrica ~${fmtNum(Math.ceil(merchDemand(s) * 1.1))} unidades/sem${s.fans < MERCH.minFans ? ` (desde ${fmtNum(MERCH.minFans)} fans)` : ''}` : `~${fmtMoney(b.base)}/semana (varía cada semana)`;
+    return `<div class="card ${own ? 'owned' : ''}">${iconImg(b.icon)}<div class="cinfo"><b>${b.name}</b><div class="muted">${b.desc}</div>
+      <div class="bonus">${info}</div></div>
+      <div class="cbuy">${own ? `<button class="btn small" data-sellbiz="${b.id}">Vender ${fmtMoney(b.price * 0.7)}</button>` : `<button class="btn primary small" data-biz="${b.id}" ${s.money < b.price ? 'disabled' : ''}>${fmtMoney(b.price)}</button>`}</div></div>`;
+  }).join('') + `</div><p class="muted small">Tus negocios te han dejado ${fmtMoney(I.bizEarned)}. Si vendes uno, recibes el 70% de lo que pagaste.</p>`;
+}
+// Comprar o vender un negocio; done() vuelve a dibujar
+function bizClick(d, done) {
+  const s = G.s, I = invState(s);
+  if (d.biz) {
+    const bz = BUSINESSES.find(x => x.id === d.biz);
+    if (s.money < bz.price || I.biz.includes(bz.id)) return false;
+    s.money -= bz.price; I.biz.push(bz.id); SFX.coin();
+    UI.toast(bz.auto ? 'Compraste la Fábrica de merch: desde ahora el merch se produce solo.' : `Compraste: ${bz.name}.`, 'good');
+    return true;
+  }
+  if (d.sellbiz) {
+    const bz = BUSINESSES.find(x => x.id === d.sellbiz);
+    askConfirm(`Te pagan ${fmtMoney(bz.price * 0.7)} (el 70% de lo que costó) y dejas de recibir ${bz.auto ? 'el merch automático' : 'sus ingresos semanales'}.`, { title: `¿Vender ${bz.name}?`, ok: 'Vender', icon: 'coin' }).then(yes => {
+      if (!yes || !I.biz.includes(bz.id)) return;
+      I.biz = I.biz.filter(x => x !== bz.id); s.money += Math.round(bz.price * 0.7);
+      SFX.coin(); saveGame(); done(); UI.refresh();
+    });
+    return true;
+  }
+  return false;
+}
+
 function invState(s = G.s) {
   if (!s.inv) s.inv = { prices: {}, hist: {}, own: {}, biz: [], bizEarned: 0, stockGain: 0 };
   for (const st of STOCKS) {
@@ -411,10 +447,10 @@ Object.assign(UI, {
 
   invest(tab = 'acciones') {
     const s = G.s, I = invState(s);
-    let cur = tab;
+    let cur = 'acciones';
     const m = this.modal('Bolsa Pixel', '', { wide: true });
     const render = () => {
-      let h = this.tabs([['acciones', 'Acciones'], ['negocios', 'Negocios']], cur) + `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b></div>`;
+      let h = this.tabs([['acciones', 'Acciones']], 'acciones') + `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b></div>`;
       if (cur === 'acciones') {
         let worth = 0;
         h += '<div class="grid">' + STOCKS.map(st => {
@@ -428,14 +464,8 @@ Object.assign(UI, {
             ${own.qty ? `<button class="btn small" data-sell="${st.id}" data-q="10">Vender 10</button><button class="btn small" data-sell="${st.id}" data-q="all">Vender todo</button>` : ''}</div></div></div>`;
         }).join('') + '</div>';
         h += `<p class="muted small">Tus acciones valen ${fmtMoney(worth)}. Los precios cambian cada semana: pueden subir o bajar. Ganancia realizada: ${fmtMoney(I.stockGain)}.</p>`;
-      } else {
-        h += '<div class="grid">' + BUSINESSES.map(b => {
-          const own = I.biz.includes(b.id);
-          return `<div class="card ${own ? 'owned' : ''}">${iconImg(b.icon)}<div class="cinfo"><b>${b.name}</b><div class="muted">${b.desc}</div>
-            <div class="bonus">~${fmtMoney(b.base)}/semana (varía cada semana)</div></div>
-            <div class="cbuy">${own ? `<button class="btn small" data-sellbiz="${b.id}">Vender ${fmtMoney(b.price * 0.7)}</button>` : `<button class="btn primary small" data-biz="${b.id}" ${s.money < b.price ? 'disabled' : ''}>${fmtMoney(b.price)}</button>`}</div></div>`;
-        }).join('') + `</div><p class="muted small">Tus negocios te han dejado ${fmtMoney(I.bizEarned)}. Si vendes uno, recibes el 70% de lo que pagaste.</p>`;
       }
+      h += '<p class="muted small">Los negocios (food truck, fábrica de merch, karaoke...) ahora están en <b>Trabajos &gt; Negocios</b>.</p><div class="row"><button class="btn small" data-gobiz="1">Ver negocios</button></div>';
       m.set(h);
     };
     m.body.addEventListener('click', e => {
@@ -458,19 +488,7 @@ Object.assign(UI, {
         if (!own.qty) delete I.own[d.sell];
         SFX.coin(); this.toast(`Vendiste ${q} acciones: ${gain >= 0 ? 'ganaste' : 'perdiste'} ${fmtMoney(Math.abs(gain))}.`, gain >= 0 ? 'good' : 'bad');
       }
-      if (d.biz) {
-        const bz = BUSINESSES.find(x => x.id === d.biz);
-        s.money -= bz.price; I.biz.push(bz.id); SFX.coin(); this.toast(`Compraste: ${bz.name}.`, 'good');
-      }
-      if (d.sellbiz) {
-        const bz = BUSINESSES.find(x => x.id === d.sellbiz);
-        askConfirm(`Te pagan ${fmtMoney(bz.price * 0.7)} (el 70% de lo que costó) y dejas de recibir sus ingresos semanales.`, { title: `¿Vender ${bz.name}?`, ok: 'Vender', icon: 'coin' }).then(yes => {
-          if (!yes || !I.biz.includes(bz.id)) return;
-          I.biz = I.biz.filter(x => x !== bz.id); s.money += Math.round(bz.price * 0.7);
-          SFX.coin(); saveGame(); render(); this.refresh();
-        });
-        return;
-      }
+      if (d.gobiz) { m.close(); SFX.click(); this.jobs('negocios'); return; }
       saveGame(); render(); this.refresh();
     });
     render();

@@ -24,7 +24,7 @@ const MENU_HELP = [
   [/^Productor$/, 'Tus estadísticas. Cada nivel te da un punto de habilidad para Composición, Grabación, Producción o Manitas (reparar cosas tú mismo).'],
   [/^Discografía/, 'Todo lo que has lanzado: nota, reproducciones, ingresos y puesto en las listas.'],
   [/^Objetivos/, 'Metas con recompensa. Cuando completes una, reclámala aquí. El siguiente capítulo se abre al reclamar el 60% del anterior.'],
-  [/^Trabajos/, 'Formas extra de ganar dinero: beats, clases, mezclas y sample packs en el estudio; DJ en el club y jingles en la radio. El merch se vende solo según tu éxito actual.'],
+  [/^Trabajos/, 'Formas extra de ganar dinero: beats, clases, mezclas y sample packs en el estudio; DJ en el club y jingles en la radio. El merch se vende solo según tu éxito actual. En la pestaña Negocios compras negocios que dejan ingresos cada semana, como la Fábrica de merch, que produce el merch sola.'],
   [/^Banco Pixel/, 'Ahorros: ganan intereses y nadie te los roba. CDT: congelas plata por más interés. Crédito: cuota semanal automática; si dejas de pagar 4 cuotas te embargan. DIAN: cuánto pagarás de impuestos.'],
   [/^Tu séquito/, 'Gente que anda contigo y te da beneficios, pero cobra cada semana. Más prestigio = más cupos.'],
   [/^Personalizar/, 'Cambia tu piel, pelo y peinado gratis. La ropa y los accesorios se compran una vez y te los pones cuando quieras.'],
@@ -35,7 +35,7 @@ const MENU_HELP = [
   [/^Tu equipo/, 'Tu personal trabaja solo cada semana. Vigila los sueldos: se cobran aunque no tengas canciones sonando.'],
   [/^La vida de/, 'Energía, hambre y ánimo bajan con los días. Si una llega a cero rindes menos y tu salud cae. Activa la rutina automática para que comas y duermas solo.'],
   [/^Tienda 24\/7/, 'Cosas que te suben una necesidad ya, pero casi todas tienen un costo después: cansancio, resaca, salud o ansiedad. Mira la letra pequeña.'],
-  [/^Bolsa Pixel/, 'Acciones: los precios suben y bajan cada semana, puedes ganar o perder. Negocios: los compras una vez y te dejan ingresos semanales.'],
+  [/^Bolsa Pixel/, 'Acciones: los precios suben y bajan cada semana, puedes ganar o perder. Los negocios ahora están en Trabajos > Negocios.'],
   [/^Café|^Club|^Radio|^Parque/, 'Actividades del lugar. Cada una gasta tiempo y cambia tus necesidades.'],
 ];
 function helpFor(title) { const h = MENU_HELP.find(([re]) => re.test(title)); return h ? h[1] : null; }

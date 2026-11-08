@@ -488,7 +488,7 @@ Object.assign(UI, {
       </div><div>
         <h3>Relación</h3>${L.partner ? `<div class="artist-line"><img class="portrait sm" src="${portraitURL(L.partner.look)}" alt=""><div><b>${esc(L.partner.name)}</b><br><span class="muted">${STAGES[L.partner.stage]}${L.partner.kind && PARTNER_TYPES[L.partner.kind] ? ' · ' + PARTNER_TYPES[L.partner.kind].name : ''}</span>
           <div class="bar-mini"><span>Amor</span><i><em style="width:${L.partner.love}%"></em></i><span>${Math.round(L.partner.love)}</span></div></div></div>
-          ${L.partner.stage >= 2 ? `<p class="muted small">Viven juntos: ahora está ${SPOT_NAME[partnerSpot(s)]}. Tócale en la pantalla para interactuar.</p>` : ''}
+          ${L.partner.stage >= 2 ? `<p class="muted small">Viven juntos: ahora está ${SPOT_NAME[partnerSpot(s)]}.${partnerSpot(s) === 'casa' ? ' Con un Lounge o un Dormitorio le verás por la casa; usa En persona.' : ' Tócale en la pantalla para interactuar.'}</p>` : ''}
           <div class="row"><button class="btn small primary" data-inperson="1">En persona</button><button class="btn small" data-date="1">Invitar a salir</button><button class="btn small" data-call="1" ${L.lastCall === s.day ? 'disabled' : ''}>Llamar</button><button class="btn small" data-chat="1">Chat</button></div>` :
           '<p class="muted">Soltero/a. Sal de fiesta o al club: quizás conozcas a alguien.</p>'}
         <h3>Premios Pixel</h3>${L.awards.length ? L.awards.map(a => `<div>${iconImg('gold')} Año ${a.year}: "${esc(a.song)}"</div>`).join('') : '<p class="muted">Aún ninguno. Se entregan cada año a la mejor canción (nota 7.5+).</p>'}

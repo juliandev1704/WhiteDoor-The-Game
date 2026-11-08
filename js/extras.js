@@ -122,12 +122,17 @@ function weeklyExtras() {
   // Merch: se vende según tus fans
   // Merch: se vende según tu éxito actual y se satura si inundas el mercado
   e.merchSat = (e.merchSat || 0) * 0.9;
+  // Fábrica de merch: repone sola lo que se va a vender
+  if (typeof hasBiz === 'function' && hasBiz('merch', s) && s.fans >= MERCH.minFans) {
+    const want = Math.ceil(merchDemand(s) * 1.1) - e.merch;
+    if (want > 0) { const cost = Math.round(want * MERCH.auto); e.merch += want; e.merchMade = (e.merchMade || 0) + want; passive -= cost; taxState(s).costs += cost; }
+  }
   if (e.merch > 0) {
     const sold = Math.min(e.merch, merchDemand(s));
     e.merch -= sold; e.merchSold += sold; e.merchSat += sold;
     const store = Math.round(e.merch * MERCH.storage);
     passive += sold * merchPrice(s) - store;
-    if (e.merch === 0) UI.toast('¡Se agotó tu merch! Pide más en Trabajos.', 'muted');
+    if (e.merch === 0 && !(typeof hasBiz === 'function' && hasBiz('merch', s))) UI.toast('¡Se agotó tu merch! Pide más en Trabajos o compra la Fábrica de merch (Trabajos > Negocios).', 'muted');
   }
   // Alquiler de la cabina cuando tus artistas no la usan
   if (e.rentCabina && hasModule('cabina')) {
@@ -138,7 +143,7 @@ function weeklyExtras() {
 }
 
 const MERCH = {
-  minFans: 500, storage: 0.05,
+  minFans: 500, storage: 0.05, auto: 5,
   batches: [{ n: 50, unit: 14 }, { n: 100, unit: 12 }, { n: 500, unit: 10 }, { n: 1000, unit: 9 }, { n: 5000, unit: 7.5 }],
 };
 // Éxito actual: qué tan buenas y sonadas están tus canciones activas
@@ -288,12 +293,15 @@ Object.assign(UI, {
     render();
   },
 
-  jobs() {
+  jobs(tab = 'trabajos') {
     const s = G.s;
+    let cur = tab;
     const m = this.modal('Trabajos y otros ingresos', '', { wide: true });
     const render = () => {
       const e = exState(s);
-      let h = `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b> · Ganado con trabajos extra: <b>${fmtMoney(e.sideIncome)}</b></div>
+      const top = this.tabs([['trabajos', 'Trabajos'], ['negocios', 'Negocios']], cur);
+      if (cur === 'negocios') { m.set(top + `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b></div>` + bizHTML(s)); return; }
+      let h = top + `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b> · Ganado con trabajos extra: <b>${fmtMoney(e.sideIncome)}</b></div>
         <p class="muted small">Mientras haces un trabajo pasa el tiempo y tu canción no avanza. Tu equipo y tu sello siguen trabajando.</p>
         <h3>Trabajos</h3><div class="grid">`;
       h += Object.entries(JOBS).map(([id, j]) => {
@@ -316,7 +324,7 @@ Object.assign(UI, {
       const dem = merchDemand(s), hype = merchHype(s);
       h += `<div class="card merch-card">${iconImg('fans')}<div class="cinfo"><b>Merch</b><div class="muted">${fmtNum(e.merch)} en inventario · ${fmtNum(e.merchSold)} vendidos.
         Se vende según tu éxito actual: demanda <b>${merchHypeLabel(hype)}</b>, ~${fmtNum(dem)}/sem a ${fmtMoney(merchPrice(s))} c/u. Si inundas el mercado se satura, y guardar cada unidad cuesta ${fmtMoney(MERCH.storage)}/sem.</div>
-        ${s.fans < MERCH.minFans ? `<div class="bonus">Necesitas ${fmtNum(MERCH.minFans)} fans</div>` : `<div class="merch-btns">${MERCH.batches.map(b => `<button class="btn small" data-merch="${b.n}" ${s.money < b.n * b.unit ? 'disabled' : ''}>${fmtNum(b.n)} · ${fmtMoney(b.n * b.unit)}</button>`).join('')}</div>`}</div></div>`;
+        ${s.fans < MERCH.minFans ? `<div class="bonus">Necesitas ${fmtNum(MERCH.minFans)} fans</div>` : hasBiz('merch', s) ? `<div class="bonus">Tu Fábrica de merch lo produce sola cada semana (${fmtMoney(MERCH.auto)} c/u).</div>` : `<div class="bonus">Tip: la Fábrica de merch (pestaña Negocios) lo produce sola.</div><div class="merch-btns">${MERCH.batches.map(b => `<button class="btn small" data-merch="${b.n}" ${s.money < b.n * b.unit ? 'disabled' : ''}>${fmtNum(b.n)} · ${fmtMoney(b.n * b.unit)}</button>`).join('')}</div>`}</div></div>`;
       const cab = hasModule('cabina');
       h += `<div class="card">${iconImg('mic')}<div class="cinfo"><b>Alquilar tu cabina</b><div class="muted">Otros músicos pagan ${fmtMoney(180)}/sem por cada puesto libre de tu Cabina de grabación.</div></div>
         <div class="cbuy">${cab ? `<button class="btn small ${e.rentCabina ? 'primary' : ''}" data-rent="1">${e.rentCabina ? 'Alquilando ✓' : 'Alquilar'}</button>` : '<span class="muted small">Necesitas una Cabina</span>'}</div></div>`;
@@ -326,6 +334,8 @@ Object.assign(UI, {
     m.body.addEventListener('click', ev => {
       const b = ev.target.closest('button'); if (!b || b.disabled) return;
       const e = exState(s);
+      if (b.dataset.tab) { cur = b.dataset.tab; SFX.click(); render(); return; }
+      if (bizClick(b.dataset, render)) { if (b.dataset.sellbiz) return; saveGame(); render(); this.refresh(); return; }
       if (b.dataset.job) {
         const r = doJob(b.dataset.job);
         if (r.err) { this.toast(r.err, 'bad'); SFX.bad(); } else this.toast(r.msg, 'good');
