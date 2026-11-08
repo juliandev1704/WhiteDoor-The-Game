@@ -463,7 +463,7 @@ Object.assign(UI, {
         <div class="row"><button class="btn small ${L.routine ? 'primary' : ''}" data-routine="1">Rutina automática: ${L.routine ? 'ON' : 'OFF'}</button></div>
         <p class="muted small">Con la rutina activa, en el estudio comes, duermes y descansas solo cuando una barra está muy baja.</p>
       </div><div>
-        <h3>Relación</h3>${L.partner ? `<div class="artist-line"><img class="portrait sm" src="${portraitURL(L.partner.look)}" alt=""><div><b>${esc(L.partner.name)}</b><br><span class="muted">${STAGES[L.partner.stage]}</span>
+        <h3>Relación</h3>${L.partner ? `<div class="artist-line"><img class="portrait sm" src="${portraitURL(L.partner.look)}" alt=""><div><b>${esc(L.partner.name)}</b><br><span class="muted">${STAGES[L.partner.stage]}${L.partner.kind && PARTNER_TYPES[L.partner.kind] ? ' · ' + PARTNER_TYPES[L.partner.kind].name : ''}</span>
           <div class="bar-mini"><span>Amor</span><i><em style="width:${L.partner.love}%"></em></i><span>${Math.round(L.partner.love)}</span></div></div></div>
           <div class="row"><button class="btn small" data-date="1" ${s.money < 60 ? 'disabled' : ''}>Salir juntos ($60)</button><button class="btn small" data-call="1" ${L.lastCall === s.day ? 'disabled' : ''}>Llamar</button></div>` :
           '<p class="muted">Soltero/a. Sal de fiesta o al club: quizás conozcas a alguien.</p>'}

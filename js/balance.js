@@ -72,27 +72,25 @@ const hasSpoony = (s = G.s) => !!(s && s.items.includes('dec_spoony'));
     };
   }
 
-  /* ---------- Spoony en el estudio ---------- */
+  /* ---------- Spoony en el estudio: alcancía sobre el escritorio ---------- */
   const baseCtl = drawControl;
   drawControl = function (ctx, s, t, opts) {
     baseCtl(ctx, s, t, opts);
     if (!hasSpoony(s)) return;
     const L = layout(s);
     X = ctx;
-    const x0 = L.cx + 70, y0 = 128;
-    R(x0 + 2, y0 + 23, 22, 2, 'rgba(0,0,0,.3)');
-    const wag = ((t / 300) | 0) % 2;
+    // Extremo derecho del escritorio (la tapa está en y 103); si hay parlantes, se sube al derecho
+    const mt = s.equip.monitor, sh = mt >= 2 ? (mt >= 3 ? 20 : 16) : 0;
+    const x0 = sh ? L.cx + 35 : L.cx + 33, y0 = 91 - sh;
+    R(x0 + 1, y0 + 12, 11, 1, 'rgba(0,0,0,.35)');
     ICONS.spoony.forEach((row, y) => {
       if (y < 2) return; // la moneda se anima aparte
-      for (let x = 0; x < 12; x++) { const c = row[x]; if (c !== '.' && ICON_PAL[c]) R(x0 + x * 2, y0 + y * 2, 2, 2, ICON_PAL[c]); }
+      for (let x = 0; x < 12; x++) { const c = row[x]; if (c !== '.' && ICON_PAL[c]) P(x0 + x, y0 + y, ICON_PAL[c]); }
     });
-    R(x0 + 24, y0 + 18 - wag * 2, 2, 4, ICON_PAL.w); // colita
+    if (((t / 300) | 0) % 2) P(x0 + 12, y0 + 8, ICON_PAL.w); else P(x0 + 12, y0 + 9, ICON_PAL.w); // colita
     // Una moneda cae por la ranura de vez en cuando
     const ph = (t % 4000) / 4000;
-    if (ph < 0.3) {
-      const cy = y0 - 10 + ph / 0.3 * 12;
-      R(x0 + 10, cy, 4, 3, ICON_PAL.y); P(x0 + 11, cy, '#fff1e8');
-    }
-    R(x0 + 10, y0 + 3, 4, 1, ICON_PAL.k); // ranura
+    if (ph < 0.3) { const cy = Math.round(y0 - 6 + ph / 0.3 * 7); R(x0 + 5, cy, 2, 2, ICON_PAL.y); }
+    R(x0 + 5, y0 + 2, 2, 1, ICON_PAL.k); // ranura
   };
 })();

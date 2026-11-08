@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>White Door — Music Studio Tycoon</title>
   <meta name="description" content="White Door: un juego tycoon 8-bit de estudio musical. Desarrollado por Julian Camilo Forero Daza.">
-  <link rel="stylesheet" href="css/style.css?v=2.7.0">
+  <link rel="stylesheet" href="css/style.css?v=2.7.1">
 </head>
 <body>
   <div id="app">
@@ -88,18 +88,33 @@
 
   <div id="title-screen" hidden>
     <div class="title-box">
-      <div class="title-logo">WHITE<br>DOOR</div>
+      <div class="title-logo">WHITE <br>DOOR</div>
       <div class="title-sub">Music Studio Tycoon</div>
-      <label class="title-label" for="title-name">Tu nombre</label>
-      <input id="title-name" maxlength="20" placeholder="Escribe tu nombre" autocomplete="off">
-      <p id="title-err" class="title-err" hidden>Escribe un nombre para empezar.</p>
-      <span class="title-label">Género</span>
-      <div id="title-gender" class="gender-pick" role="group" aria-label="Género">
-        <button type="button" data-g="h" class="on">Hombre</button><button type="button" data-g="m">Mujer</button><button type="button" data-g="x">Otro</button>
-      </div>
-      <div class="title-buttons">
-        <button id="btn-continue" class="btn primary" hidden>Continuar</button>
+      <div id="title-menu" class="title-buttons">
+        <button id="btn-continue" class="btn primary" hidden>Continuar partida</button>
         <button id="btn-new" class="btn primary">Nueva partida</button>
+      </div>
+      <div id="title-create" hidden>
+        <label class="title-label" for="title-name">Tu nombre</label>
+        <input id="title-name" maxlength="20" placeholder="Escribe tu nombre" autocomplete="off">
+        <p id="title-err" class="title-err" hidden>Escribe un nombre para empezar.</p>
+        <span class="title-label">Género</span>
+        <div id="title-gender" class="gender-pick" role="group" aria-label="Género">
+          <button type="button" data-g="h" class="on">Hombre</button><button type="button" data-g="m">Mujer</button><button type="button" data-g="x">Otro</button>
+        </div>
+        <span class="title-label">Te atraen</span>
+        <div id="title-love" class="gender-pick" role="group" aria-label="Te atraen">
+          <button type="button" data-v="m" class="on">Mujeres</button><button type="button" data-v="h">Hombres</button><button type="button" data-v="t">Ambos</button>
+        </div>
+        <span class="title-label">Tu pareja ideal</span>
+        <div id="title-type" class="gender-pick four" role="group" aria-label="Tu pareja ideal">
+          <button type="button" data-v="romantica">Romántica</button><button type="button" data-v="fiestera">Fiestera</button><button type="button" data-v="tranquila">Tranquila</button><button type="button" data-v="sorpresa" class="on">Sorpresa</button>
+        </div>
+        <p id="title-type-desc" class="title-hint"></p>
+        <div class="title-buttons">
+          <button id="btn-start" class="btn primary">Empezar</button>
+          <button id="btn-back" class="btn">Volver</button>
+        </div>
       </div>
       <div class="credits">Desarrollado por<br><b>Julian Camilo Forero Daza</b></div>
     </div>
@@ -117,24 +132,25 @@
   <div id="modal-root"></div>
   <div id="toasts"></div>
 
-  <script src="js/data.js?v=2.7.0"></script>
-  <script src="js/data2.js?v=2.7.0"></script>
-  <script src="js/render.js?v=2.7.0"></script>
-  <script src="js/modules.js?v=2.7.0"></script>
-  <script src="js/audio.js?v=2.7.0"></script>
-  <script src="js/game.js?v=2.7.0"></script>
-  <script src="js/life.js?v=2.7.0"></script>
-  <script src="js/label.js?v=2.7.0"></script>
-  <script src="js/world.js?v=2.7.0"></script>
-  <script src="js/ui.js?v=2.7.0"></script>
-  <script src="js/ui2.js?v=2.7.0"></script>
-  <script src="js/extras.js?v=2.7.0"></script>
-  <script src="js/empire.js?v=2.7.0"></script>
-  <script src="js/phone.js?v=2.7.0"></script>
-  <script src="js/main.js?v=2.7.0"></script>
-  <script src="js/guide.js?v=2.7.0"></script>
-  <script src="js/city2.js?v=2.7.0"></script>
-  <script src="js/scenes.js?v=2.7.0"></script>
-  <script src="js/balance.js?v=2.7.0"></script>
+  <script src="js/data.js?v=2.7.1"></script>
+  <script src="js/data2.js?v=2.7.1"></script>
+  <script src="js/render.js?v=2.7.1"></script>
+  <script src="js/modules.js?v=2.7.1"></script>
+  <script src="js/audio.js?v=2.7.1"></script>
+  <script src="js/game.js?v=2.7.1"></script>
+  <script src="js/life.js?v=2.7.1"></script>
+  <script src="js/label.js?v=2.7.1"></script>
+  <script src="js/world.js?v=2.7.1"></script>
+  <script src="js/ui.js?v=2.7.1"></script>
+  <script src="js/ui2.js?v=2.7.1"></script>
+  <script src="js/extras.js?v=2.7.1"></script>
+  <script src="js/empire.js?v=2.7.1"></script>
+  <script src="js/phone.js?v=2.7.1"></script>
+  <script src="js/main.js?v=2.7.1"></script>
+  <script src="js/guide.js?v=2.7.1"></script>
+  <script src="js/city2.js?v=2.7.1"></script>
+  <script src="js/scenes.js?v=2.7.1"></script>
+  <script src="js/balance.js?v=2.7.1"></script>
+  <script src="js/title.js?v=2.7.1"></script>
 </body>
 </html>

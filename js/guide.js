@@ -80,10 +80,8 @@ function helpFor(title) { const h = MENU_HELP.find(([re]) => re.test(title)); re
     gender = b.dataset.g; SFX.init(); SFX.click();
     document.querySelectorAll('#title-gender [data-g]').forEach(x => x.classList.toggle('on', x === b));
   }));
-  // Reemplaza el botón de nueva partida para pedir nombre y género
-  const oldBtn = $('#btn-new'), btn = oldBtn.cloneNode(true);
-  oldBtn.replaceWith(btn);
-  btn.addEventListener('click', () => {
+  // Botón Empezar de la creación del personaje: nombre, género y preferencias de pareja
+  $('#btn-start').addEventListener('click', () => {
     const name = nameIn.value.trim();
     if (!name) { nameIn.focus(); nameIn.classList.add('need'); $('#title-err').hidden = false; return; }
     if (hasSave() && !confirm('Ya tienes una partida guardada. ¿Empezar una nueva? (Se perderá la anterior)')) return;
@@ -91,6 +89,7 @@ function helpFor(title) { const h = MENU_HELP.find(([re]) => re.test(title)); re
     st.gender = gender;
     lookState(st);
     if (gender === 'm') st.life.look.style = 1;
+    st.life.pref = titlePrefs();
     startGame(st, true);
   });
   nameIn.addEventListener('input', () => { nameIn.classList.remove('need'); $('#title-err').hidden = true; });

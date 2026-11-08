@@ -99,11 +99,6 @@ function startGame(state, isNew) {
   state.life.seenV2 = true;
 }
 
-$('#btn-new').addEventListener('click', () => {
-  if (hasSave() && !confirm('Ya tienes una partida guardada. ¿Empezar una nueva? (Se perderá la anterior)')) return;
-  const name = $('#title-name').value.trim() || 'Julian';
-  startGame(newState(name), true);
-});
 $('#btn-continue').addEventListener('click', () => {
   const s = loadGame();
   if (s) startGame(s, false);

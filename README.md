@@ -38,13 +38,14 @@ Desarrollado por **Julian Camilo Forero Daza**.
 - **Bolsa Pixel:** acciones de 4 empresas cuyo precio sube y baja cada semana, y negocios (food truck, tienda de discos, bar karaoke, escuela de música, sala de conciertos) que dejan ingresos semanales.
 - **Festivales:** desde 40 de prestigio, los festivales te contratan para tocar en vivo. Puedes aceptar, negociar o rechazar.
 - **Stiwai:** gorila de peluche raro con gafas de esquí ($35.000, desde el Garaje estudio). Sube un poco la velocidad, las fases, el ambiente y el ánimo.
-- **Spoony:** perrito alcancía blanco ($60.000, desde el Garaje estudio). +5% en pagos de canciones y trabajos, el doble de intereses en los ahorros y monedas cada semana.
+- **Spoony:** perrito alcancía blanco que vive sobre el escritorio ($60.000, desde el Garaje estudio). +5% en pagos de canciones y trabajos, el doble de intereses en los ahorros y monedas cada semana.
 - **Chocheiner:** peluche legendario único ($120.000, desde el Estudio en local). Sube velocidad, fases, ambiente y ánimo.
 - **Merch:** se vende según tu éxito actual (canciones sonando, nota y listas), el precio sube con tu prestigio y el mercado se satura si lo inundas. Lotes de 50 a 5.000 unidades, más baratos por volumen.
 - **Celular** (botón sobre la escena o tecla `T`): guarda o saca plata del banco en un toque, pide comida a domicilio (PixelEats), toma un taxi a cualquier lugar y compra en línea (Tienda 24/7, Do Re Mi con 20% de envío, Pixel Mall, Casas y Talentos). También abre mensajes, séquito, estilo, objetivos y trabajos.
 - **Banco Pixel:** cuenta de ahorros con intereses (nadie te la roba en la calle), CDT a 12, 24 o 48 semanas (solo con la plata que ya tienes ahorrada) y créditos con cuota semanal automática. Si dejas de pagar 4 cuotas, el banco embarga tus ahorros.
 - **La DIAN:** cobra una vez al año solo sobre tus ganancias: ingresos menos todos los gastos del negocio (arriendo, salarios, séquito, equipo, decoración, mudanzas, módulos, cursos, merch, reparaciones, seguridad, robos y pérdidas en la bolsa). Tramos de 0% (hasta $60.000), 3%, 6% y 9%, con tope del 3% de lo que tienes. Avisa 4 semanas antes. Puedes pagar de una, contratar un contador o pagar en 4 cuotas.
 - **Notas de las canciones:** igualar tu mejor canción da cerca de 8. Para un 10 hay que superarla por mucho y además tener una combinación genial, un reparto casi perfecto y una mezcla limpia. Repetir el mismo género seguido baja la nota.
+- **Inicio y pareja:** la pantalla de inicio muestra Continuar partida y Nueva partida. Al crear el personaje eliges nombre, género, quién te atrae (mujeres, hombres o ambos) y tu pareja ideal: romántica (el amor se enfría más despacio), fiestera (más ánimo), tranquila (más salud y energía) o sorpresa.
 - **Tiempo:** un día dura 1,6 segundos a velocidad 1x.
 - **Séquito:** parcero, chef, chofer, estilista, fotógrafo, guardaespaldas, contador y mánager. Cada uno da un beneficio, cobra cada semana y te sigue por la ciudad (panel Vida → Séquito).
 - **Personalizar** (panel Vida): piel, color de pelo, 7 peinados, 13 prendas, gorras, cadenas y audífonos. Cada prenda muestra cómo te verías y puedes **probártela** antes de comprarla.
@@ -96,6 +97,7 @@ y abre http://localhost:5173.
 | `js/guide.js` | Pantalla de carga, creación del personaje y ayuda de cada menú |
 | `js/city2.js` | Tienda 24/7, seguridad del estudio, Bolsa, negocios, festivales y el Chocheiner |
 | `js/balance.js` | Deducciones de la DIAN y Spoony, el perrito alcancía |
+| `js/title.js` | Pantalla de inicio (Continuar / Nueva partida), creación del personaje y preferencias de pareja |
 | `js/scenes.js` | Escenas animadas (premios, dormir, toques), el productor de frente, vista previa de ropa y panel de seguridad |
 | `js/ui.js`, `js/ui2.js` | Menús, paneles y ventanas |
 | `js/main.js` | Arranque y bucle principal |

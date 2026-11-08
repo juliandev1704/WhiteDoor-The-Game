@@ -750,3 +750,14 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
   .cs-frame canvas { height: auto; aspect-ratio: 16 / 9; }
   .cs-cap { position: static; transform: none; margin: 14px auto 0; width: fit-content; font-size: 11px; }
 }
+
+/* v2.7.1 — creación del personaje */
+.gender-pick.four { grid-template-columns: repeat(2, 1fr); }
+.title-hint { color: var(--muted); font-size: 17px; margin: 6px 0 0; min-height: 2.4em; }
+#title-create .title-buttons { margin-top: 14px; }
+#title-screen [hidden] { display: none !important; }
+.title-box { max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px); overflow-y: auto; }
+.title-box.creating .title-logo { font-size: 26px; }
+.title-box.creating .title-logo br { display: none; }
+.title-box.creating .title-sub { margin: 8px 0 12px; }
+.title-box.creating .credits { display: none; }
