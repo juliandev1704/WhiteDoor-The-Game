@@ -262,14 +262,26 @@ function releaseSong() {
   const comboF = ct === 'good' ? 1.15 : ct === 'bad' ? 0.75 : 1;
   const key = d.genre + '|' + d.topic;
   const repeatF = s.lastCombo === key ? 0.85 : 1;
+  // Repetir el mismo género seguido cansa a la crítica
+  const sameGenre = s.songs.slice(0, 3).filter(x => x.genre === d.genre).length;
+  const genreF = 1 - 0.05 * sameGenre;
   const pts = d.cre + d.tec;
   const noiseF = 1 - Math.min(0.35, d.noise / Math.max(1, pts) * 0.6);
-  const q = (pts / d.weeksTotal) * fitF * comboF * repeatF * noiseF;
+  const q = (pts / d.weeksTotal) * fitF * comboF * repeatF * genreF * noiseF;
 
-  const ref = Math.max(10, s.best * 0.95);
+  // Igualar tu mejor canción da ~8. Para un 9-10 hay que superarla de verdad (+35%)
+  const ref = Math.max(10, s.best);
   const ratio = q / ref;
-  const base = 1 + 9 * clamp((ratio - 0.4) / 0.8, 0, 1);
-  const critics = CRITICS.map(name => ({ name, score: clamp(Math.round(base + rnd(-0.8, 0.8)), 1, 10) }));
+  const base = ratio <= 1.05
+    ? 1 + 7 * clamp((ratio - 0.4) / 0.65, 0, 1)
+    : 8 + 2 * clamp((ratio - 1.05) / 0.35, 0, 1);
+  // Un 10 exige todo: combinación genial, reparto casi perfecto y mezcla limpia
+  let cap = 10;
+  const capWhy = [];
+  if (ct !== 'good') { cap = 9; capWhy.push('una combinación genial de género y tema'); }
+  if (fit < 0.93) { cap = Math.min(cap, fit < 0.8 ? 8 : 9); capWhy.push('un reparto de enfoque más preciso'); }
+  if (noiseF < 0.93) { cap = Math.min(cap, 9); capWhy.push('una mezcla más limpia (pule el ruido)'); }
+  const critics = CRITICS.map(name => ({ name, score: clamp(Math.round(base + rnd(-0.8, 0.5)), 1, cap) }));
   const avg = critics.reduce((a, c) => a + c.score, 0) / critics.length;
   if (q > s.best) s.best = q;
 
@@ -287,6 +299,8 @@ function releaseSong() {
     insights.push(`${AREAS[i].name} en ${g.name}: ${importanceLabel(g.w[i])}`);
   }
   if (repeatF < 1) tips.push('El público se cansó de la misma combinación.');
+  if (sameGenre >= 2) tips.push(`Ya sacaste mucho ${g.name} seguido; cambia de género para sorprender.`);
+  if (base >= 9 && cap < 10 && capWhy.length) tips.push(`Para un 10 te faltó ${capWhy.join(', ')}.`);
   if (noiseF < 0.85) tips.push('Se escuchaba mucho ruido en la mezcla.');
 
   const artist = d.artist;

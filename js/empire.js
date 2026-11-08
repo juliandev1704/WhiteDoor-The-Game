@@ -33,11 +33,12 @@ const pctTxt = v => Math.round(v * 100) + '%';
    (antes cobraba 5% de todo tu dinero, por eso dolía tanto)
    ========================================================= */
 const TAX_BRACKETS = [
-  { upTo: 25000, rate: 0 },
-  { upTo: 100000, rate: 0.04 },
-  { upTo: 400000, rate: 0.08 },
-  { upTo: Infinity, rate: 0.12 },
+  { upTo: 60000, rate: 0 },
+  { upTo: 250000, rate: 0.03 },
+  { upTo: 1000000, rate: 0.06 },
+  { upTo: Infinity, rate: 0.09 },
 ];
+const TAX_CAP = 0.03; // nunca más del 3% de lo que tienes (efectivo + ahorros)
 function taxFor(profit) {
   let t = 0, prev = 0;
   for (const b of TAX_BRACKETS) { if (profit > prev) t += (Math.min(profit, b.upTo) - prev) * b.rate; prev = b.upTo; }
@@ -48,7 +49,7 @@ function taxEstimate(s = G.s) {
   let tax = taxFor(yearProfit(s));
   if (hasEntourage('contador', s)) tax *= 0.8;
   const wealth = Math.max(0, s.money) + bankState(s).savings;
-  tax = Math.min(tax, wealth * 0.05); // tope: nunca más del 5% de lo que tienes
+  tax = Math.min(tax, wealth * TAX_CAP);
   return Math.round(tax / 10) * 10;
 }
 function weeksToTax(s = G.s) { const w = s.week % 48; return w < 20 ? 20 - w : 68 - w; }
@@ -62,7 +63,7 @@ function taxEvent() {
   const cuota = Math.round(tax * 1.08 / 4);
   return {
     title: 'La DIAN: declaración de renta', icon: 'coin',
-    text: `Tus ganancias del último año fueron ${fmtMoney(profit)} (ingresos menos arriendo, salarios y séquito). Por tramos te toca pagar ${fmtMoney(tax)}, el ${pctTxt(tax / Math.max(1, profit))} de tus ganancias.`,
+    text: `Tus ganancias del último año fueron ${fmtMoney(profit)} (ingresos menos los gastos del negocio). Por tramos te toca pagar ${fmtMoney(tax)}, el ${pctTxt(tax / Math.max(1, profit))} de tus ganancias.`,
     options: [
       { label: `Pagar ${fmtMoney(tax)}`, desc: 'Al día con la DIAN.', run() { charge(tax); T.paid += tax; return 'Pagaste tus impuestos. Duermes tranquilo.'; } },
       { label: `Contratar un contador (${fmtMoney(acct)})`, desc: `Deducciones legales: pagas ${fmtMoney(tax * 0.7)}`, run() { const t = Math.round(tax * 0.7); charge(t + acct); T.paid += t; return `El contador encontró deducciones. Pagaste ${fmtMoney(t)}.`; } },
@@ -322,7 +323,7 @@ Object.assign(UI, {
         }
       } else {
         const profit = yearProfit(s), est = taxEstimate(s);
-        h += `<p class="muted">La DIAN cobra una vez al año, solo sobre tus <b>ganancias</b> (ingresos menos arriendo, salarios y séquito), por tramos y con tope del 5% de lo que tienes.</p>
+        h += `<p class="muted">La DIAN cobra una vez al año, solo sobre tus <b>ganancias</b>: ingresos menos <b>todos</b> los gastos del negocio (arriendo, salarios, séquito, equipo, decoración, mudanzas, módulos, cursos, merch, seguridad y pérdidas). Por tramos y con tope del 3% de lo que tienes.</p>
           <div class="grid">
             <div class="card">${iconImg('coin')}<div class="cinfo"><b>Este año llevas</b><div class="muted">Ingresos ${fmtMoney(T.gross)} · Gastos ${fmtMoney(T.costs)}</div><div class="bonus">Ganancia: ${fmtMoney(profit)}</div></div></div>
             <div class="card">${iconImg('book')}<div class="cinfo"><b>Impuesto estimado: ${fmtMoney(est)}</b><div class="muted">Declaración en ${weeksToTax(s)} semana(s)${hasEntourage('contador', s) ? ' · tu contador ya te ahorra 20%' : ''}</div>${T.plan ? `<div class="bonus">Plan de pagos: ${T.plan.left} cuota(s) de ${fmtMoney(T.plan.cuota)}</div>` : ''}</div></div>

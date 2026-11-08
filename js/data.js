@@ -148,6 +148,8 @@ const DECOR = [
     desc: 'Gorila de peluche con gafas de esquí. Raro y con mucho flow: +4% velocidad, +1 en todas las fases, +ambiente y un poco de ánimo cada día.' },
   { id: 'dec_chocheiner', name: 'Chocheiner (peluche legendario)', price: 120000, amb: 10, spd: 1.1, p: [3, 3, 3], icon: 'chocheiner', room: 3, legend: true,
     desc: 'Único en el mundo. Te mira fijo mientras produces: +10% velocidad, +3 en todas las fases, +ambiente y +ánimo cada día.' },
+  { id: 'dec_spoony', name: 'Spoony (perrito alcancía)', price: 60000, amb: 7, icon: 'spoony', room: 2, rare: true,
+    desc: 'Un perrito blanco que en realidad es una alcancía. Cuida tu plata: +5% en pagos de canciones y trabajos, el doble de intereses en tus ahorros y suelta monedas cada semana.' },
 ];
 
 const ROOMS = [

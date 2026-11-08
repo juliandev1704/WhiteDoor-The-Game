@@ -454,7 +454,7 @@ Object.assign(UI, {
         const q = d.q === 'all' ? own.qty : Math.min(own.qty, +d.q);
         const gain = (p - own.cost) * q;
         s.money += p * q; own.qty -= q; I.stockGain += gain;
-        if (gain > 0) taxState(s).gross += gain;
+        if (gain > 0) taxState(s).gross += gain; else taxState(s).costs -= gain; // las pérdidas se descuentan
         if (!own.qty) delete I.own[d.sell];
         SFX.coin(); this.toast(`Vendiste ${q} acciones: ${gain >= 0 ? 'ganaste' : 'perdiste'} ${fmtMoney(Math.abs(gain))}.`, gain >= 0 ? 'good' : 'bad');
       }

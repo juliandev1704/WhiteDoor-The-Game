@@ -2,7 +2,7 @@
 /* =========================================================
    WHITE DOOR v2 — Datos de mundo abierto, vida, discográfica
    ========================================================= */
-const DAY_MS = 1000; // un día de juego a velocidad 1x
+const DAY_MS = 1600; // un día de juego a velocidad 1x (antes 1000: el tiempo volaba)
 
 SKILLS.manitas = { name: 'Manitas', desc: 'Reparas averías tú mismo con más éxito.' };
 COURSES.push(
