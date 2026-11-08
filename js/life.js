@@ -273,8 +273,7 @@ const LIFE_EVENTS = [
         title: `Plan con ${p.name}`, icon: 'fans',
         text: `${p.name} quiere pasar tiempo contigo esta semana.`,
         options: [
-          { label: 'Cena elegante ($200)', desc: '+Amor, +Ánimo', disabled: s.money < 200, run() { activity({ cost: 200, days: 0.3, animo: 12, hambre: 50 }); p.love = clamp(p.love + 20, 0, 100); return 'Una noche perfecta.'; } },
-          { label: 'Paseo por el parque', desc: '+Amor', run() { activity({ days: 0.3, animo: 8 }); p.love = clamp(p.love + 10, 0, 100); return 'Caminaron y hablaron por horas.'; } },
+          ...dateOptions(s, p),
           { label: 'Cancelar: tienes trabajo', desc: '−Amor', run() { p.love = clamp(p.love - 15, 0, 100); return `${p.name} se quedó triste.`; } },
         ],
       };
@@ -286,7 +285,7 @@ const LIFE_EVENTS = [
       title: '¿Algo serio?', icon: 'fans',
       text: `Llevas un tiempo saliendo con ${s.life.partner.name}. ¿Le pides que sea tu pareja?`,
       options: [
-        { label: '¡Sí!', run() { s.life.partner.stage = 1; s.life.partner.love += 10; completeGoal('pareja'); addNeeds({ animo: 20 }); return '¡Ahora son novios!'; } },
+        { label: '¡Sí!', run() { s.life.partner.stage = 1; s.life.partner.love += 10; completeGoal('pareja'); addNeeds({ animo: 20 }); playLove('moment', { kind: 'beso', caption: ['¿Quieres ser mi pareja?', '¡Ahora son novios!'] }); return '¡Ahora son novios!'; } },
         { label: 'Todavía no', run() { s.life.partner.love -= 5; return null; } },
       ],
     }),
@@ -297,7 +296,7 @@ const LIFE_EVENTS = [
       title: 'Vivir juntos', icon: 'house',
       text: `${s.life.partner.name} te propone que vivan juntos.`,
       options: [
-        { label: 'Mudarnos juntos', desc: 'Tu ánimo baja más lento', run() { s.life.partner.stage = 2; addNeeds({ animo: 20 }); return '¡Nuevo hogar, nueva etapa!'; } },
+        { label: 'Mudarnos juntos', desc: 'Tu ánimo baja más lento', run() { s.life.partner.stage = 2; addNeeds({ animo: 20 }); playLove('movein'); return `¡Nuevo hogar, nueva etapa! Toca a ${s.life.partner.name} en tu casa para pasar tiempo juntos.`; } },
         { label: 'Prefiero esperar', run() { s.life.partner.love -= 10; return null; } },
       ],
     }),
@@ -305,10 +304,10 @@ const LIFE_EVENTS = [
   {
     id: 'boda', cond: s => s.life.partner && s.life.partner.stage === 2 && s.life.partner.love >= 85,
     make: s => ({
-      title: '¿Propuesta de matrimonio?', icon: 'gold',
+      title: '¿Propuesta de matrimonio?', icon: 'ring',
       text: `Llevas años con ${s.life.partner.name}. Crees que es el momento. La boda costaría $8.000.`,
       options: [
-        { label: 'Proponer matrimonio ($8.000)', disabled: s.money < 8000, run() { s.money -= 8000; s.life.partner.stage = 3; s.life.partner.love = 100; s.needs.animo = 100; completeGoal('boda'); passTime(3); return '¡Se casaron! La mejor fiesta de la historia.'; } },
+        { label: 'Proponer matrimonio ($8.000)', disabled: s.money < 8000, run() { s.money -= 8000; s.life.partner.stage = 3; s.life.partner.love = 100; s.needs.animo = 100; completeGoal('boda'); passTime(3); playLove('wedding'); return '¡Se casaron! La mejor fiesta de la historia.'; } },
         { label: 'Más adelante', run() { return null; } },
       ],
     }),

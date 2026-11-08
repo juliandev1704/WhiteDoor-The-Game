@@ -23,6 +23,8 @@ Desarrollado por **Julian Camilo Forero Daza**.
 ### Vida (estilo Sims)
 - **Necesidades:** energía, hambre, ánimo y salud. Si las descuidas rindes menos, te desmayas o terminas en el hospital.
 - **Decisiones de vida:** fiestas, familia, pareja (salir, formalizar, vivir juntos, casarse), concursos, préstamos, impuestos, bloqueos creativos, premios anuales y más.
+- **Pareja:** escenas animadas en cada cita (cena, cine, picnic, paseo al atardecer), al mudarse juntos y en la boda. Cuando viven juntos, tu pareja anda por la casa (sala de control, cocina del lounge, dormitorio); tócale para abrazar, besar, cocinar, ver una película, bailar o pasar la noche juntos.
+- **Chats (celular):** habla con tu pareja, con los artistas de tu sello y con los artistas con los que has trabajado. Puedes pedir colaboraciones o que te compartan en redes, y te escriben solos.
 - **Averías:** el computador, el micrófono, los monitores, la luz, el techo o el aire acondicionado se pueden dañar. Puedes repararlos tú (habilidad Manitas) o llamar a un técnico.
 - **Aspiraciones:** metas de vida y de carrera con recompensas.
 
@@ -33,7 +35,7 @@ Desarrollado por **Julian Camilo Forero Daza**.
 - **Rutina automática** (panel Vida): comes, duermes y descansas solo cuando una barra está muy baja.
 
 ### Dinero y estilo
-- **Tienda 24/7:** café, bebidas hidratantes, energizantes, vitaminas, cerveza, aguardiente, whisky, cigarrillos, vape, Velos (bolsitas de nicotina) y chicles de nicotina. Cada uno te ayuda ya, pero casi todos tienen un costo después: el energizante da energía ilimitada una semana y luego 2 semanas de bajón; el alcohol deja resaca; la nicotina crea dependencia y ansiedad. También vende seguridad para el estudio: alarma, firewall y caja fuerte.
+- **Tienda 24/7 · Pixel Mall:** separada por apartados (snacks, bebidas y energía, salud, licores, nicotina) y con el Pixel Mall adentro (decoración, ropa, objetos, viajes) y la seguridad. Vende café, bebidas hidratantes, energizantes, vitaminas, cerveza, aguardiente, whisky, cigarrillos, vape, Velos (bolsitas de nicotina) y chicles de nicotina. Cada uno te ayuda ya, pero casi todos tienen un costo después: el energizante da energía ilimitada una semana y luego 2 semanas de bajón; el alcohol deja resaca; la nicotina crea dependencia y ansiedad. También vende seguridad para el estudio: alarma, firewall y caja fuerte.
 - **Amenazas:** te pueden robar el estudio (efectivo y equipo), hackear tu computador y filtrar la canción que estás haciendo, o intentar estafarte con mensajes y negocios "garantizados".
 - **Bolsa Pixel:** acciones de 4 empresas cuyo precio sube y baja cada semana, y negocios (food truck, tienda de discos, bar karaoke, escuela de música, sala de conciertos) que dejan ingresos semanales.
 - **Festivales:** desde 40 de prestigio, los festivales te contratan para tocar en vivo. Puedes aceptar, negociar o rechazar.
@@ -97,6 +99,8 @@ y abre http://localhost:5173.
 | `js/guide.js` | Pantalla de carga, creación del personaje y ayuda de cada menú |
 | `js/city2.js` | Tienda 24/7, seguridad del estudio, Bolsa, negocios, festivales y el Chocheiner |
 | `js/balance.js` | Deducciones de la DIAN y Spoony, el perrito alcancía |
+| `js/apps.js` | Íconos del celular y de la tienda, Tienda 24/7 con apartados y Pixel Mall |
+| `js/love.js` | Escenas de pareja (citas, mudanza, boda, momentos), la pareja en la casa y la app de Chats |
 | `js/title.js` | Pantalla de inicio (Continuar / Nueva partida), creación del personaje y preferencias de pareja |
 | `js/scenes.js` | Escenas animadas (premios, dormir, toques), el productor de frente, vista previa de ropa y panel de seguridad |
 | `js/ui.js`, `js/ui2.js` | Menús, paneles y ventanas |

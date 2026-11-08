@@ -774,3 +774,23 @@ button, .chip, .tab, .opt { touch-action: manipulation; -webkit-tap-highlight-co
 .ask-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .ask .btn.danger { background: var(--bad); color: #fff; }
 .ask-ico .pxicon { width: 48px; height: 48px; }
+
+/* ---------- v2.8: chats, apartados de la tienda ---------- */
+.ph-app { position: relative; }
+.ph-badge { position: absolute; top: -6px; right: calc(50% - 34px); min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: #ff004d; color: #fff; border: 2px solid #000; font-style: normal; font-size: 13px; line-height: 16px; text-align: center; }
+.chat-list { display: flex; flex-direction: column; gap: 6px; }
+.chat-row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: #1d1b2e; border: 2px solid #000; border-radius: 10px; padding: 6px 8px; color: var(--ink); cursor: pointer; position: relative; font: inherit; }
+.chat-row:hover { background: #2a2640; }
+.chat-row > span { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.chat-row small { color: #a8a4bc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.chat-badge { min-width: 22px; height: 22px; border-radius: 11px; background: #00a8a0; color: #fff; font-style: normal; text-align: center; line-height: 22px; font-size: 14px; padding: 0 5px; }
+.chat-head { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+.chat-head small { display: block; color: #a8a4bc; font-size: 14px; }
+.chat-log { display: flex; flex-direction: column; gap: 6px; max-height: 46vh; overflow-y: auto; padding: 8px; background: #0f0d1c; border: 2px solid #000; border-radius: 10px; }
+.chat-b { align-self: flex-start; max-width: 80%; background: #2a2640; color: var(--ink); padding: 6px 10px; border-radius: 12px 12px 12px 2px; line-height: 1.25; animation: chat-in .2s ease-out; }
+.chat-b.me { align-self: flex-end; background: #00a8a0; color: #fff; border-radius: 12px 12px 2px 12px; }
+.chat-b.typing { color: #a8a4bc; font-style: italic; }
+@keyframes chat-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.chat-replies { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.store-sec { display: flex; align-items: center; gap: 6px; margin: 12px 0 6px; }
+.store-sec .pxicon { width: 24px; height: 24px; }

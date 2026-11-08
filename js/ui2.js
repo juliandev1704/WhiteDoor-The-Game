@@ -127,7 +127,7 @@ Object.assign(UI, {
         { label: 'Buscar inspiración', desc: 'Inspiración duradera: +15% productividad', cost: 0, act: { days: 0.5, animo: 10, inspired: 10 } },
         { label: 'Salir a trotar', desc: '+Salud, +Ánimo, −Energía', cost: 0, act: { days: 0.3, energia: -10, animo: 12, salud: 10 } },
         { label: `Picnic con ${p ? p.name : ''}`, desc: '+Amor, +Ánimo', cost: 40, cond: !!p, act: { days: 0.4, hambre: 40, animo: 20 },
-          after: () => { p.love = clamp(p.love + 12, 0, 100); return `${p.name} la pasó increíble.`; } },
+          after: () => { p.love = clamp(p.love + 12, 0, 100); playLove('date', { kind: 'picnic' }); return `${p.name} la pasó increíble.`; } },
       ],
       radio: [
         { label: 'Entrevista en vivo', desc: '+Fans y prestigio (1 vez por mes)', cost: 0, cond: s.prestige >= 120, act: { days: 0.3, energia: -5, animo: 5 },
@@ -242,17 +242,20 @@ Object.assign(UI, {
   },
 
   /* ---------- Centro comercial: decoración, ropa, objetos y viajes ---------- */
-  mall(tab = 'deco') {
-    const s = G.s, L = s.life;
+  mall(tab = 'deco', opts = {}) {
+    const s = G.s, L = s.life, store = !!opts.store;
     let cur = tab;
     const TRIPS = [
       { id: 'playa', name: 'Una semana en la playa', price: 2500, days: 7, desc: 'Todas tus necesidades al 100% e inspiración por 2 semanas.', insp: 14 },
       { id: 'europa', name: 'Gira por Europa (2 semanas)', price: 12000, days: 14, desc: 'Vuelves renovado, inspirado por un mes y con historias para contar. +15 prestigio.', insp: 28, prestige: 15 },
     ];
-    const m = this.modal('Centro Comercial', '', { wide: true });
+    const m = this.modal(store ? 'Tienda 24/7 · Pixel Mall' : 'Centro Comercial', '', { wide: true });
+    const tabs = [['deco', 'Decoración'], ['ropa', 'Ropa'], ['obj', 'Objetos'], ['viajes', 'Viajes']];
+    if (store) { tabs.unshift(['247', '24/7']); tabs.push(['seguridad', 'Seguridad']); }
     const render = () => {
-      let h = this.tabs([['deco', 'Decoración'], ['ropa', 'Ropa'], ['obj', 'Objetos'], ['viajes', 'Viajes']], cur) +
-        `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b></div><div class="grid">`;
+      let h = this.tabs(tabs, cur) + `<div class="money-line">Dinero: <b>${fmtMoney(s.money)}</b></div>`;
+      if (cur === '247') { m.set(h + store247HTML(s)); return; }
+      h += '<div class="grid">';
       if (cur === 'deco') {
         h += DECOR.map(it => this.card(it, s.items.includes(it.id) ? 'owned' : (it.room && s.room < it.room ? 'locked' : 'buy'), `data-item="${it.id}"`)).join('');
       } else if (cur === 'ropa') {
@@ -273,7 +276,12 @@ Object.assign(UI, {
     };
     m.body.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b || b.disabled) return;
-      if (b.dataset.tab) { SFX.click(); cur = b.dataset.tab; render(); return; }
+      if (b.dataset.tab) {
+        SFX.click();
+        if (b.dataset.tab === 'seguridad') { m.close(); this.security(); return; }
+        cur = b.dataset.tab; render(); return;
+      }
+      if (b.dataset.buy247) buy247(b.dataset.buy247);
       if (b.dataset.item) {
         const err = buyItem(b.dataset.item);
         if (err) { this.toast(err, 'bad'); SFX.bad(); } else { this.toast(`Compraste: ${DECOR_BY_ID[b.dataset.item].name}`, 'good'); SFX.coin(); }
@@ -480,7 +488,8 @@ Object.assign(UI, {
       </div><div>
         <h3>Relación</h3>${L.partner ? `<div class="artist-line"><img class="portrait sm" src="${portraitURL(L.partner.look)}" alt=""><div><b>${esc(L.partner.name)}</b><br><span class="muted">${STAGES[L.partner.stage]}${L.partner.kind && PARTNER_TYPES[L.partner.kind] ? ' · ' + PARTNER_TYPES[L.partner.kind].name : ''}</span>
           <div class="bar-mini"><span>Amor</span><i><em style="width:${L.partner.love}%"></em></i><span>${Math.round(L.partner.love)}</span></div></div></div>
-          <div class="row"><button class="btn small" data-date="1" ${s.money < 60 ? 'disabled' : ''}>Salir juntos ($60)</button><button class="btn small" data-call="1" ${L.lastCall === s.day ? 'disabled' : ''}>Llamar</button></div>` :
+          ${L.partner.stage >= 2 ? `<p class="muted small">Viven juntos: ahora está ${SPOT_NAME[partnerSpot(s)]}. Tócale en la pantalla para interactuar.</p>` : ''}
+          <div class="row"><button class="btn small primary" data-inperson="1">En persona</button><button class="btn small" data-date="1">Invitar a salir</button><button class="btn small" data-call="1" ${L.lastCall === s.day ? 'disabled' : ''}>Llamar</button><button class="btn small" data-chat="1">Chat</button></div>` :
           '<p class="muted">Soltero/a. Sal de fiesta o al club: quizás conozcas a alguien.</p>'}
         <h3>Premios Pixel</h3>${L.awards.length ? L.awards.map(a => `<div>${iconImg('gold')} Año ${a.year}: "${esc(a.song)}"</div>`).join('') : '<p class="muted">Aún ninguno. Se entregan cada año a la mejor canción (nota 7.5+).</p>'}
       </div></div>`;
@@ -502,7 +511,9 @@ Object.assign(UI, {
       if (b.dataset.open) { m.close(); SFX.click(); ({ look: () => this.customize(), seq: () => this.entourage(), sec: () => this.security() })[b.dataset.open](); return; }
       if (b.dataset.routine) { L.routine = !L.routine; this.toast(L.routine ? 'Rutina automática activada.' : 'Rutina automática desactivada.', 'muted'); }
       if (b.dataset.fix) { m.close(); this.choice(breakdownEvent(b.dataset.fix)); return; }
-      if (b.dataset.date) { activity({ cost: 60, days: 0.4, animo: 12 }); L.partner.love = clamp(L.partner.love + 10, 0, 100); this.toast(`Pasaste una linda tarde con ${L.partner.name}.`, 'good'); }
+      if (b.dataset.date) { m.close(); SFX.click(); this.dateMenu(); return; }
+      if (b.dataset.inperson) { m.close(); SFX.click(); this.partnerMenu(); return; }
+      if (b.dataset.chat) { m.close(); SFX.click(); this.chats('p:' + L.partner.name); return; }
       if (b.dataset.call) { L.lastCall = s.day; L.partner.love = clamp(L.partner.love + 3, 0, 100); addNeeds({ animo: 3 }); this.toast(`Hablaste un rato con ${L.partner.name}.`, 'good'); }
       SFX.click(); saveGame(); render(); this.refresh();
     });
